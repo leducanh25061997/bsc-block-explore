@@ -1,0 +1,1 @@
+export const API_URL = "https://strong-adaptation-production.up.railway.app";
