@@ -4,7 +4,7 @@ import { request } from '@/utils/request';
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 export const login = (data: AuthParams) => request.post(API_URL + '/login', data);
-export const addRef = (data: AddRefPayload) => request.post(API_URL + '/login', data);
+export const addRef = (data: AddRefPayload) => request.post(API_URL + '/addRef', data);
 
 // Mutation
 export const useLoginMutation = () => useMutation({ mutationFn: login });
