@@ -32,7 +32,6 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   function (response) {
-    console.log(response.data, 'response.data')
     return response.data;
   },
   function (errorResponse) {

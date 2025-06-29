@@ -31,12 +31,12 @@ const Header: React.FC = () => {
       const payload: AuthParams = { address};
       try {
         loginMutation.mutate(payload, {
-          onSuccess: (response) => {
+          onSuccess: (response: any) => {
             if (response) {
-              console.log(response, "response")
+              // console.log(response, "response")
               const refPayload: AddRefPayload = {
                 address,
-                ref: response?.data?.userdata?.ref
+                ref: response?.userdata?.ref
               };
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
