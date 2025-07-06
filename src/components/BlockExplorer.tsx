@@ -6,7 +6,7 @@ import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Clock, Hash, Activity } from 'lucide-react';
 
 interface BlockExplorerProps {
-  onSelectBlock: (blockNumber: string) => void;
+  onSelectBlock: (blockNumber: string, hash: string) => void;
 }
 
 const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
@@ -64,7 +64,7 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
               </div>
               <div className="pt-2" data-id="zbtpuk163" data-path="src/components/BlockExplorer.tsx">
                 <Button
-                onClick={() => onSelectBlock(block.number)}
+                onClick={() => onSelectBlock(block.number, block.hash)}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" data-id="qpcirei97" data-path="src/components/BlockExplorer.tsx">
 
                   Select Block for Transaction

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
@@ -15,6 +15,7 @@ const Header: React.FC = () => {
   const loginMutation = useLoginMutation();
   const addRefMutation = useAddRefMutation();
   const { disconnect } = useDisconnect();
+  const [isShowAlerConnect, setIsShowAlerConnect] = useState<boolean>(false);
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -24,8 +25,8 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isConnected && address) {
-      toast.success('✅ Connect wallet success.', {
+    if (isShowAlerConnect && isConnected && address) {
+      toast.success('Connect wallet success.', {
         position: 'top-right',
       });
       const payload: AuthParams = { address};
@@ -48,6 +49,7 @@ const Header: React.FC = () => {
                   });
                 },
               });
+              setIsShowAlerConnect(false)
             }
           },
           onError: (err) => {
@@ -60,7 +62,7 @@ const Header: React.FC = () => {
         console.log(error)
       }
     }
-  }, [isConnected, address]);
+  }, [isConnected, address, isShowAlerConnect]);
 
   const handleDisconnect = async () => {
     await disconnect();
@@ -109,7 +111,10 @@ const Header: React.FC = () => {
                 //     position: 'top-right',
                 //   });
                 // }}
-                onClick={() => open()}
+                onClick={() => {
+                  setIsShowAlerConnect(true);
+                  open();
+                }}
                 className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-500 hover:to-orange-600" data-id="a0glzvvwj" data-path="src/components/Header.tsx">
 
                 <Wallet className="w-4 h-4 mr-2" data-id="1khgn0el7" data-path="src/components/Header.tsx" />

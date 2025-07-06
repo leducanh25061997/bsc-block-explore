@@ -13,11 +13,15 @@ import SwapInterface from './components/SwapInterface';
 import ReferralSystem from './components/ReferralSystem';
 import Statistics from './components/Statistics';
 import { ToastContainer } from 'react-toastify';
-
+import { useWriteContract } from "wagmi";
+import { parseUnits } from 'viem';
+import { useAppKitAccount } from '@reown/appkit/react';
 // Web3
 import { createAppKit } from '@reown/appkit/react'
 import { WagmiProvider } from 'wagmi'
 import { metadata, networks, projectId, wagmiAdapter } from './config';
+import { mainnet } from 'viem/chains';
+import Home from './pages/Home';
 const generalConfig = {
   projectId,
   networks,
@@ -40,33 +44,6 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('blocks');
-  const [selectedBlock, setSelectedBlock] = useState<string | undefined>();
-
-  const handleSelectBlock = (blockNumber: string) => {
-    setSelectedBlock(blockNumber);
-    setActiveTab('transaction');
-  };
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'blocks':
-        return <BlockExplorer onSelectBlock={handleSelectBlock} data-id="sbmvcyc5y" data-path="src/App.tsx" />;
-      case 'transaction':
-        return <TransactionForm selectedBlock={selectedBlock} data-id="kd9ov61g3" data-path="src/App.tsx" />;
-      case 'wallet':
-        return <WalletDashboard data-id="razaddntj" data-path="src/App.tsx" />;
-      case 'mining':
-        return <Mining data-id="ra5yrtjq6" data-path="src/App.tsx" />;
-      case 'swap':
-        return <SwapInterface data-id="dcu4brejj" data-path="src/App.tsx" />;
-      case 'referral':
-        return <ReferralSystem data-id="6zvrpvzvw" data-path="src/App.tsx" />;
-      case 'statistics':
-        return <Statistics data-id="8f43xq71s" data-path="src/App.tsx" />;
-      default:
-        return <BlockExplorer onSelectBlock={handleSelectBlock} data-id="ivtk0u7l6" data-path="src/App.tsx" />;
-    }
-  };
 
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig}>
@@ -78,7 +55,8 @@ const App = () => {
               <div className="flex" data-id="i1avv64bb" data-path="src/App.tsx">
                 <Sidebar activeTab={activeTab} onTabChange={setActiveTab} data-id="sj9d2u7u0" data-path="src/App.tsx" />
                 <main className="flex-1 p-6 overflow-y-auto" data-id="j3qbmx7az" data-path="src/App.tsx">
-                  {renderContent()}
+                  {/* {renderContent()} */}
+                  <Home activeTab={activeTab} />
                 </main>
               </div>
             </div>
