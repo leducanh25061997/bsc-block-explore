@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { ArrowRightLeft, TrendingUp, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const SwapInterface: React.FC = () => {
   const {
@@ -18,7 +19,7 @@ const SwapInterface: React.FC = () => {
     buyBMTokens
   } = useBlockMint();
   const { toast } = useToast();
-
+  const { address, isConnected } = useAppKitAccount();
   const [bnbAmount, setBnbAmount] = useState<string>('');
   const [bmAmount, setBmAmount] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +94,7 @@ const SwapInterface: React.FC = () => {
     return isNaN(bmValue) ? '0' : (bmValue * BM_PRICE).toFixed(4);
   };
 
-  if (!wallet) {
+  if (!address && !isConnected) {
     return (
       <Card className="max-w-4xl mx-auto" data-id="fizas7e9a" data-path="src/components/SwapInterface.tsx">
         <CardContent className="text-center py-12" data-id="r91de9nwi" data-path="src/components/SwapInterface.tsx">
@@ -141,7 +142,7 @@ const SwapInterface: React.FC = () => {
         <Card data-id="rgrodf1fh" data-path="src/components/SwapInterface.tsx">
           <CardContent className="text-center py-4" data-id="g5k4l0eqz" data-path="src/components/SwapInterface.tsx">
             <div className="text-sm text-gray-600 mb-1" data-id="6sf7kwqva" data-path="src/components/SwapInterface.tsx">BNB Balance</div>
-            <div className="text-xl font-bold" data-id="i6qae2kfh" data-path="src/components/SwapInterface.tsx">{wallet.bnbBalance.toFixed(4)}</div>
+            <div className="text-xl font-bold" data-id="i6qae2kfh" data-path="src/components/SwapInterface.tsx">{wallet?.bnbBalance?.toFixed(4)}</div>
           </CardContent>
         </Card>
         <Card data-id="1eosn0lm6" data-path="src/components/SwapInterface.tsx">
@@ -187,7 +188,7 @@ const SwapInterface: React.FC = () => {
                     onChange={(e) => setBnbAmount(e.target.value)} data-id="02hy4flw1" data-path="src/components/SwapInterface.tsx" />
 
                   <div className="text-sm text-gray-500" data-id="i4g8v5jvz" data-path="src/components/SwapInterface.tsx">
-                    Available: {wallet.bnbBalance.toFixed(4)} BNB
+                    Available: {wallet?.bnbBalance?.toFixed(4)} BNB
                   </div>
                 </div>
 
@@ -204,7 +205,7 @@ const SwapInterface: React.FC = () => {
 
                 <Button
                   onClick={handleBNBToBM}
-                  disabled={isLoading || !bnbAmount || parseFloat(bnbAmount) > wallet.bnbBalance}
+                  disabled={isLoading || !bnbAmount || parseFloat(bnbAmount) > wallet?.bnbBalance}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="apgwhrfg0" data-path="src/components/SwapInterface.tsx">
 
                   <ArrowRightLeft className="w-4 h-4 mr-2" data-id="ws8myefjd" data-path="src/components/SwapInterface.tsx" />

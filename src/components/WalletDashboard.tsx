@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Wallet, Lock, Unlock, TrendingUp, History, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const WalletDashboard: React.FC = () => {
   const {
@@ -16,6 +17,7 @@ const WalletDashboard: React.FC = () => {
     withdrawBNB
   } = useBlockMint();
   const { toast } = useToast();
+  const { address, isConnected } = useAppKitAccount();
 
   const handleWithdraw = async () => {
     if (!systemWallet) return;
@@ -48,7 +50,7 @@ const WalletDashboard: React.FC = () => {
     }
   };
 
-  if (!wallet) {
+  if (!address && !isConnected) {
     return (
       <Card className="max-w-4xl mx-auto" data-id="uhlu7j5dw" data-path="src/components/WalletDashboard.tsx">
         <CardContent className="text-center py-12" data-id="ldt7le6xd" data-path="src/components/WalletDashboard.tsx">
@@ -80,11 +82,11 @@ const WalletDashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-3" data-id="0mjv95ywr" data-path="src/components/WalletDashboard.tsx">
             <div className="font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
-              {wallet.address}
+              {address}
             </div>
             <div className="flex justify-between items-center" data-id="vxopocere" data-path="src/components/WalletDashboard.tsx">
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
-              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{wallet.bnbBalance.toFixed(4)} BNB</span>
+              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{wallet?.bnbBalance?.toFixed(4)} BNB</span>
             </div>
             <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
               Transaction Limit: 100 USDT

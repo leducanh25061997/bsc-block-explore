@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Pickaxe, Zap, Clock, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const Mining: React.FC = () => {
   const {
@@ -17,6 +18,7 @@ const Mining: React.FC = () => {
     isTransactionTime
   } = useBlockMint();
   const { toast } = useToast();
+  const { address, isConnected } = useAppKitAccount();
 
   const handleMining = () => {
     try {
@@ -41,7 +43,7 @@ const Mining: React.FC = () => {
   const autoMiningRate = bmTokens.total * 0.001; // 0.1% per hour
   const dailyProgress = mining.dailyMiningCount / 2 * 100;
 
-  if (!wallet) {
+  if (!address && !isConnected) {
     return (
       <Card className="max-w-4xl mx-auto" data-id="v3g5slszp" data-path="src/components/Mining.tsx">
         <CardContent className="text-center py-12" data-id="0weijfg3k" data-path="src/components/Mining.tsx">

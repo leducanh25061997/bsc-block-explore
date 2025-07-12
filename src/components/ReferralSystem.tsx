@@ -6,10 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Users, Share2, Gift, TrendingUp, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const ReferralSystem: React.FC = () => {
   const { wallet, referral } = useBlockMint();
   const { toast } = useToast();
+  const { address, isConnected } = useAppKitAccount();
 
   const copyReferralLink = () => {
     const referralLink = `${window.location.origin}?ref=${referral.code}`;
@@ -28,7 +30,7 @@ const ReferralSystem: React.FC = () => {
     });
   };
 
-  if (!wallet) {
+  if (!address && !isConnected) {
     return (
       <Card className="max-w-4xl mx-auto" data-id="0dzrws0re" data-path="src/components/ReferralSystem.tsx">
         <CardContent className="text-center py-12" data-id="wt2mg458k" data-path="src/components/ReferralSystem.tsx">

