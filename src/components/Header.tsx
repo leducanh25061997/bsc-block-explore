@@ -7,8 +7,15 @@ import { useAppKit, useAppKitAccount, useDisconnect } from '@reown/appkit/react'
 import { useAddRefMutation, useLoginMutation } from '@/services/service';
 import { AddRefPayload, AuthParams } from '@/types/types';
 import { toast } from 'react-toastify';
+import { AnimatePresence, motion } from 'motion/react';
+import Sidebar from './Sidebar';
 
-const Header: React.FC = () => {
+interface SidebarProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const { wallet, connectWallet, disconnectWallet, isTransactionTime, timeLeft } = useBlockMint();
   const { open } = useAppKit(); // AppKit hook to open the modal
   const { address, isConnected } = useAppKitAccount() // AppKit hook to get the address and check if the user is connected
@@ -16,6 +23,9 @@ const Header: React.FC = () => {
   const addRefMutation = useAddRefMutation();
   const { disconnect } = useDisconnect();
   const [isShowAlerConnect, setIsShowAlerConnect] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const closeSidebar = () => setIsOpen(false);
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -29,7 +39,7 @@ const Header: React.FC = () => {
       toast.success('Connect wallet success.', {
         position: 'top-right',
       });
-      const payload: AuthParams = { address};
+      const payload: AuthParams = { address };
       try {
         loginMutation.mutate(payload, {
           onSuccess: (response: any) => {
@@ -78,13 +88,55 @@ const Header: React.FC = () => {
             <div className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent" data-id="nk6ggrbwa" data-path="src/components/Header.tsx">
               BlockMint
             </div>
-            <Badge variant={isTransactionTime ? "default" : "secondary"} className="text-sm" data-id="u9xwpiupr" data-path="src/components/Header.tsx">
-              <Clock className="w-4 h-4 mr-1" data-id="6gm4zsndu" data-path="src/components/Header.tsx" />
-              {isTransactionTime ? 'Trading Active' : `Next Window: ${formatTime(timeLeft)}`}
-            </Badge>
+            <div className='mr-1 hidden md:flex'>
+              <Badge variant={isTransactionTime ? "default" : "secondary"} className="text-sm" data-id="u9xwpiupr" data-path="src/components/Header.tsx">
+                <Clock className="w-4 h-4" data-id="6gm4zsndu" data-path="src/components/Header.tsx" />
+                {isTransactionTime ? 'Trading Active' : `Next Window: ${formatTime(timeLeft)}`}
+              </Badge>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-4" data-id="45qntje6p" data-path="src/components/Header.tsx">
+          <div className='flex md:hidden'>
+            <button onClick={toggleSidebar} className="text-4xl text-blue-500 focus:outline-none">
+              ☰
+            </button>
+          </div>
+
+          <div className="hidden md:flex items-center space-x-4" data-id="45qntje6p" data-path="src/components/Header.tsx">
+            {isConnected && address ?
+              <div className="flex justify-between items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
+                <div className="text-sm" data-id="yyhnx3c07" data-path="src/components/Header.tsx">
+                  <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected</div>
+                  <div className="text-gray-300 font-mono text-xs" data-id="u80jns8dw" data-path="src/components/Header.tsx">
+                    {address.slice(0, 6)}...{address.slice(-4)}
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  // onClick={disconnectWallet}
+                  onClick={handleDisconnect}
+                  className="bg-transparent border-white/20 text-white hover:bg-white/10" data-id="2ix97pnwn" data-path="src/components/Header.tsx">
+
+                  Disconnect
+                </Button>
+              </div> :
+
+              <Button
+                onClick={() => {
+                  setIsShowAlerConnect(true);
+                  open();
+                }}
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-500 hover:to-orange-600" data-id="a0glzvvwj" data-path="src/components/Header.tsx">
+
+                <Wallet className="w-4 h-4 mr-2" data-id="1khgn0el7" data-path="src/components/Header.tsx" />
+                Connect Wallet
+              </Button>
+            }
+          </div>
+        </div>
+
+        <div className="flex md:hidden justify-between items-center space-x-4" data-id="45qntje6p" data-path="src/components/Header.tsx">
             {isConnected && address ?
               <div className="flex items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
                 <div className="text-sm" data-id="yyhnx3c07" data-path="src/components/Header.tsx">
@@ -105,12 +157,6 @@ const Header: React.FC = () => {
               </div> :
 
               <Button
-                // onClick={connectWallet}
-                // onClick={() => {
-                //   toast.success('Hey 👋!', {
-                //     position: 'top-right',
-                //   });
-                // }}
                 onClick={() => {
                   setIsShowAlerConnect(true);
                   open();
@@ -122,8 +168,56 @@ const Header: React.FC = () => {
               </Button>
             }
           </div>
+
+        <div className='mr-1 flex md:hidden w-full mt-4'>
+          <Badge variant={isTransactionTime ? "default" : "secondary"} className="text-sm w-full py-2" data-id="u9xwpiupr" data-path="src/components/Header.tsx">
+            <Clock className="w-4 h-4 mr-1" data-id="6gm4zsndu" data-path="src/components/Header.tsx" />
+            {isTransactionTime ? 'Trading Active' : `Next Window: ${formatTime(timeLeft)}`}
+          </Badge>
         </div>
       </div>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Overlay nền tối */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 z-40 min-h-screen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeSidebar}
+            />
+
+            {/* Sidebar */}
+            <motion.aside
+              className="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-lg z-50 min-h-screen"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="flex justify-between items-center p-4">
+                <div className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent" data-id="nk6ggrbwa" data-path="src/components/Header.tsx">
+                  BlockMint
+                </div>
+                <button onClick={closeSidebar} className="text-2xl">×</button>
+              </div>
+              <Sidebar activeTab={activeTab} onTabChange={onTabChange} />
+              <div className=''>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  // onClick={disconnectWallet}
+                  onClick={handleDisconnect}
+                  className="bg-transparent border-white text-white hover:bg-white/10" data-id="2ix97pnwn" data-path="src/components/Header.tsx">
+
+                  Disconnect
+                </Button>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </header>);
 
 };

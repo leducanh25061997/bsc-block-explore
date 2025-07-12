@@ -51,9 +51,11 @@ const App = () => {
         <TooltipProvider data-id="j3oaek9sy" data-path="src/App.tsx">
           <BlockMintProvider data-id="sgtwh45pe" data-path="src/App.tsx">
             <div className="min-h-screen bg-gray-50" data-id="i90ojjoc1" data-path="src/App.tsx">
-              <Header data-id="sz6rd0nns" data-path="src/App.tsx" />
+              <Header data-id="sz6rd0nns" data-path="src/App.tsx" activeTab={activeTab} onTabChange={setActiveTab} />
               <div className="flex" data-id="i1avv64bb" data-path="src/App.tsx">
-                <Sidebar activeTab={activeTab} onTabChange={setActiveTab} data-id="sj9d2u7u0" data-path="src/App.tsx" />
+                <div className='hidden md:flex'>
+                  <Sidebar activeTab={activeTab} onTabChange={setActiveTab} data-id="sj9d2u7u0" data-path="src/App.tsx" />
+                </div>     
                 <main className="flex-1 p-6 overflow-y-auto" data-id="j3qbmx7az" data-path="src/App.tsx">
                   {/* {renderContent()} */}
                   <Home activeTab={activeTab} />
