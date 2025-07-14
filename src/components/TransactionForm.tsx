@@ -285,9 +285,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
             </div>
 
             <Button
-              type="submit"
+              // type="submit"
+              onClick={() => handleTranfer()}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600"
-              disabled={!isTransactionTime} data-id="y516kwf8c" data-path="src/components/TransactionForm.tsx">
+              // disabled={!isTransactionTime} 
+              data-id="y516kwf8c" 
+              data-path="src/components/TransactionForm.tsx"
+            >
 
               {isTransactionTime ? "Next: Review Transaction" : "Trading Window Closed"}
             </Button>
