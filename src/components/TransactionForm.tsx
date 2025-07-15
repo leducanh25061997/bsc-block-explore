@@ -10,9 +10,9 @@ import { AlertCircle, Send, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount } from '@reown/appkit/react';
 import { parseUnits } from 'viem';
-import { bsc } from 'viem/chains';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
+import { bsc } from 'viem/chains';
 interface TransactionFormProps {
   selectedBlock?: string;
 }
@@ -27,7 +27,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const [amount, setAmount] = useState<string>('');
   const [step, setStep] = useState<'form' | 'confirm' | 'success'>('form');
   const [isLoading, setIsLoading] = useState(false);
-  // const decimals = 4;
+  const decimals = 4;
   const { writeContractAsync, isPending } = useWriteContract();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,15 +82,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   };
 
   const handleTranfer = async () => {
-    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) return;
-    if (!/^0x[a-fA-F0-9]{40}$/.test(toAddress)) return;
-    if (!amount || isNaN(Number(amount))) return;
-
-    const decimals = decimalMultiplication();
-    if (typeof decimals !== 'number') return;
-
+    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+      return;
+    }
     try {
-      const parsedAmount = parseUnits(amount, decimals);
       const txHash = await writeContractAsync({
         account: address as `0x${string}`,
         chain: bsc, // ✅ BẮT BUỘC
@@ -108,7 +103,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
           },
         ],
         functionName: 'transfer',
-        args: [toAddress as `0x${string}`, parsedAmount],
+        args: [
+          toAddress as `0x${string}`, 
+          // parseUnits(amount, decimals)
+          parseUnits(amount, decimalMultiplication())
+        ],
       });
       console.log(txHash, 'txHash')
     } catch (err) {
