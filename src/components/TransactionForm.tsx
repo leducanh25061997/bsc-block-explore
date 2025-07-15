@@ -27,7 +27,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const [amount, setAmount] = useState<string>('');
   const [step, setStep] = useState<'form' | 'confirm' | 'success'>('form');
   const [isLoading, setIsLoading] = useState(false);
-  const decimals = 4;
+  // const decimals = 4;
   const { writeContractAsync, isPending } = useWriteContract();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,6 +90,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
     if (typeof decimals !== 'number') return;
 
     try {
+      const parsedAmount = parseUnits(amount, decimals);
       const txHash = await writeContractAsync({
         account: address as `0x${string}`,
         chain: bsc, // ✅ BẮT BUỘC
@@ -107,8 +108,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
           },
         ],
         functionName: 'transfer',
-        args: [toAddress as `0x${string}`, parseUnits(amount, decimalMultiplication())
-        ],
+        args: [toAddress as `0x${string}`, parsedAmount],
       });
       console.log(txHash, 'txHash')
     } catch (err) {
