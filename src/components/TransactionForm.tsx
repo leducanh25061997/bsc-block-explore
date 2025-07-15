@@ -27,7 +27,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const [amount, setAmount] = useState<string>('');
   const [step, setStep] = useState<'form' | 'confirm' | 'success'>('form');
   const [isLoading, setIsLoading] = useState(false);
-  const decimals = 6;
+  const decimals = 4;
   const { writeContractAsync, isPending } = useWriteContract();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -220,7 +220,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
           </CardTitle>
         </CardHeader>
         <CardContent data-id="ahquk4paq" data-path="src/components/TransactionForm.tsx">
-          <form onSubmit={handleSubmit} className="space-y-6" data-id="05p6tfiv2" data-path="src/components/TransactionForm.tsx">
+          {/* <form onSubmit={handleSubmit} className="space-y-6" data-id="05p6tfiv2" data-path="src/components/TransactionForm.tsx"> */}
             <div className="space-y-2" data-id="t3zmkvl9i" data-path="src/components/TransactionForm.tsx">
               <Label htmlFor="fromWallet" data-id="bhqoauw50" data-path="src/components/TransactionForm.tsx">From Wallet</Label>
               <Select value={fromWallet} onValueChange={setFromWallet} required data-id="rrvsmn3ld" data-path="src/components/TransactionForm.tsx">
@@ -274,7 +274,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
               }
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-lg" data-id="8k488onbl" data-path="src/components/TransactionForm.tsx">
+            <div className="bg-blue-50 p-4 rounded-lg mt-4" data-id="8k488onbl" data-path="src/components/TransactionForm.tsx">
               <h4 className="font-semibold text-blue-800 mb-2" data-id="vgi0i8ajm" data-path="src/components/TransactionForm.tsx">Transaction Limits</h4>
               <ul className="text-sm text-blue-700 space-y-1" data-id="eu2ze3zww" data-path="src/components/TransactionForm.tsx">
                 <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Maximum 10 transactions per day</li>
@@ -287,7 +287,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
             <Button
               // type="submit"
               onClick={() => handleTranfer()}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 mt-4"
               // disabled={!isTransactionTime} 
               data-id="y516kwf8c" 
               data-path="src/components/TransactionForm.tsx"
@@ -295,7 +295,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
 
               {isTransactionTime ? "Next: Review Transaction" : "Trading Window Closed"}
             </Button>
-          </form>
+          {/* </form> */}
         </CardContent>
       </Card>
     </div>);
