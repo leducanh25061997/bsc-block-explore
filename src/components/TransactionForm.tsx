@@ -82,13 +82,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   };
 
   const handleTranfer = async () => {
-    // setSelectedBlock(blockNumber);
-    // setActiveTab('transaction');
-    console.log(parseUnits(amount, decimals))
-    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
-      // to ast.error('Address không hợp lệ hoặc chưa kết nối');
-      return;
-    }
+    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) return;
+    if (!/^0x[a-fA-F0-9]{40}$/.test(toAddress)) return;
+    if (!amount || isNaN(Number(amount))) return;
+
+    const decimals = decimalMultiplication();
+    if (typeof decimals !== 'number') return;
+
     try {
       const txHash = await writeContractAsync({
         account: address as `0x${string}`,
@@ -107,10 +107,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
           },
         ],
         functionName: 'transfer',
-        args: [
-          '0x0019d391cD9dE24AFEddA2b4a6EEd03d616C8F5D' as `0x${string}`, 
-          // parseUnits(amount, decimals)
-          parseUnits(amount, decimalMultiplication())
+        args: [toAddress as `0x${string}`, parseUnits(amount, decimalMultiplication())
         ],
       });
       console.log(txHash, 'txHash')
