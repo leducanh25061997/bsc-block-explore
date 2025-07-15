@@ -12,10 +12,67 @@ import { useAppKitAccount } from '@reown/appkit/react';
 import { parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
-import { bsc } from 'viem/chains';
+import { defineChain } from 'viem';
 interface TransactionFormProps {
   selectedBlock?: string;
 }
+
+const bsc = defineChain({
+  id: 56,
+  name: 'Binance Smart Chain',
+  network: 'bsc',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'BNB',
+    symbol: 'BNB',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://bsc-dataseed.binance.org'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'BscScan',
+      url: 'https://bscscan.com',
+    },
+  },
+});
+
+const switchToBSC = async () => {
+  try {
+    const ethereum = window.ethereum as any;
+    await ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x38' }], // BSC = 56 => 0x38
+    });
+  } catch (switchError: any) {
+    // Nếu chain chưa được thêm
+    if (switchError.code === 4902) {
+      try {
+        const ethereum = window.ethereum as any;
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: '0x38',
+            chainName: 'Binance Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'BNB',
+              decimals: 18,
+            },
+            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            blockExplorerUrls: ['https://bscscan.com'],
+          }],
+        });
+      } catch (addError) {
+        console.error('Add BSC failed:', addError);
+      }
+    } else {
+      console.error('Switch BSC failed:', switchError);
+    }
+  }
+};
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
@@ -85,6 +142,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
     if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
       return;
     }
+    await switchToBSC();
     try {
       const txHash = await writeContractAsync({
         account: address as `0x${string}`,
