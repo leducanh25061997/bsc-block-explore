@@ -13,6 +13,8 @@ import { parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
+import { useAddTransitionMutation } from '@/services/service';
+import { toast } from 'react-toastify';
 interface TransactionFormProps {
   selectedBlock?: string;
 }
@@ -78,6 +80,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
+  const addTransitionMutation = useAddTransitionMutation();
 
   const [fromWallet, setFromWallet] = useState<string>('');
   const [toAddress, setToAddress] = useState<string>('');
@@ -168,9 +171,37 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
         ],
       });
       console.log(txHash, 'txHash')
-    } catch (err) {
-      console.log(err);
-      // toast("error", `Stake failed. Please try again.`);
+      if (txHash) {
+        addTransitionMutation.mutate(
+          {
+            address,
+            transaction: txHash
+          },
+          { 
+            onSuccess: () => {
+              toast({
+                title: "Transaction Successful",
+                description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
+              });
+            },
+            onError: error => {
+              console.log(error);
+              toast({
+                title: "Transaction Failed",
+                description: error instanceof Error ? error.message : "An error occurred",
+                variant: "destructive"
+              });
+            }
+          }
+        )
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Transaction Failed",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive"
+      });
     }
   };
 
