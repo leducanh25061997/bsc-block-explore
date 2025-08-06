@@ -29,7 +29,7 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
 
       <div className="grid gap-4" data-id="wkq4tnzsv" data-path="src/components/BlockExplorer.tsx">
         {blocks.map((block) =>
-        <Card key={block.number} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500" data-id="775adkeo5" data-path="src/components/BlockExplorer.tsx">
+          <Card key={block.number} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500" data-id="775adkeo5" data-path="src/components/BlockExplorer.tsx">
             <CardHeader className="pb-3" data-id="94zr7q8b9" data-path="src/components/BlockExplorer.tsx">
               <div className="flex items-center justify-between" data-id="192drqvlh" data-path="src/components/BlockExplorer.tsx">
                 <CardTitle className="text-lg font-semibold text-gray-800" data-id="9x0nob0e3" data-path="src/components/BlockExplorer.tsx">
@@ -64,8 +64,8 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
               </div>
               <div className="pt-2" data-id="zbtpuk163" data-path="src/components/BlockExplorer.tsx">
                 <Button
-                onClick={() => onSelectBlock(block.number, block.hash)}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" data-id="qpcirei97" data-path="src/components/BlockExplorer.tsx">
+                  onClick={() => onSelectBlock(block.number, block.hash)}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" data-id="qpcirei97" data-path="src/components/BlockExplorer.tsx">
 
                   Select Block for Transaction
                 </Button>

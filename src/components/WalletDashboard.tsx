@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,9 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Wallet, Lock, Unlock, TrendingUp, History, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAppKitAccount } from '@reown/appkit/react';
+import { useAppKitAccount, useAppKitBalance } from '@reown/appkit/react';
 
-const WalletDashboard: React.FC = () => {
+interface WalletDashboardProps {
+  balance?: any;
+}
+
+const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const {
     wallet,
     systemWallet,
@@ -38,15 +42,16 @@ const WalletDashboard: React.FC = () => {
   };
 
   const formatTimestamp = (timestamp: number) => {
+    console.log("======> FORMT TIMESTAP")
     return new Date(timestamp).toLocaleString();
   };
 
   const getTransactionTypeColor = (type: string) => {
     switch (type) {
-      case 'block':return 'bg-blue-100 text-blue-800';
-      case 'swap':return 'bg-green-100 text-green-800';
-      case 'withdraw':return 'bg-purple-100 text-purple-800';
-      default:return 'bg-gray-100 text-gray-800';
+      case 'block': return 'bg-blue-100 text-blue-800';
+      case 'swap': return 'bg-green-100 text-green-800';
+      case 'withdraw': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -86,7 +91,7 @@ const WalletDashboard: React.FC = () => {
             </div>
             <div className="flex justify-between items-center" data-id="vxopocere" data-path="src/components/WalletDashboard.tsx">
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
-              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{wallet?.bnbBalance?.toFixed(4)} BNB</span>
+              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{balance?.data?.balance ? Number(balance?.data?.balance).toFixed(4) : 0} BNB</span>
             </div>
             <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
               Transaction Limit: 100 USDT
@@ -95,7 +100,7 @@ const WalletDashboard: React.FC = () => {
         </Card>
 
         {systemWallet &&
-        <Card data-id="0rlyp41p9" data-path="src/components/WalletDashboard.tsx">
+          <Card data-id="0rlyp41p9" data-path="src/components/WalletDashboard.tsx">
             <CardHeader data-id="7s5evvxom" data-path="src/components/WalletDashboard.tsx">
               <CardTitle className="flex items-center" data-id="hfbqu6dna" data-path="src/components/WalletDashboard.tsx">
                 <TrendingUp className="w-5 h-5 mr-2" data-id="1man9nknp" data-path="src/components/WalletDashboard.tsx" />
@@ -111,9 +116,9 @@ const WalletDashboard: React.FC = () => {
                 <span className="font-semibold" data-id="n9rvqmfv7" data-path="src/components/WalletDashboard.tsx">{systemWallet.bnbBalance.toFixed(4)} BNB</span>
               </div>
               <Button
-              onClick={handleWithdraw}
-              className="w-full bg-gradient-to-r from-green-600 to-blue-600"
-              disabled={systemWallet.bnbBalance === 0} data-id="99mmzsqyj" data-path="src/components/WalletDashboard.tsx">
+                onClick={handleWithdraw}
+                className="w-full bg-gradient-to-r from-green-600 to-blue-600"
+                disabled={systemWallet.bnbBalance === 0} data-id="99mmzsqyj" data-path="src/components/WalletDashboard.tsx">
 
                 <Download className="w-4 h-4 mr-2" data-id="w98als2x1" data-path="src/components/WalletDashboard.tsx" />
                 Withdraw to Connected Wallet
@@ -187,27 +192,27 @@ const WalletDashboard: React.FC = () => {
               <TabsTrigger value="swap" data-id="saqjhsiuj" data-path="src/components/WalletDashboard.tsx">Swaps</TabsTrigger>
               <TabsTrigger value="withdraw" data-id="decqu8597" data-path="src/components/WalletDashboard.tsx">Withdrawals</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="all" className="space-y-4" data-id="mzi20v242" data-path="src/components/WalletDashboard.tsx">
               {transactions.length === 0 ?
-              <div className="text-center py-8 text-gray-500" data-id="mfxmuwfqu" data-path="src/components/WalletDashboard.tsx">
+                <div className="text-center py-8 text-gray-500" data-id="mfxmuwfqu" data-path="src/components/WalletDashboard.tsx">
                   No transactions yet
                 </div> :
 
-              <div className="space-y-3" data-id="mbp3ihnp4" data-path="src/components/WalletDashboard.tsx">
+                <div className="space-y-3" data-id="mbp3ihnp4" data-path="src/components/WalletDashboard.tsx">
                   {transactions.map((tx) =>
-                <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="92i5b7c3e" data-path="src/components/WalletDashboard.tsx">
+                    <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="92i5b7c3e" data-path="src/components/WalletDashboard.tsx">
                       <div className="flex-1" data-id="p5xv4gh8d" data-path="src/components/WalletDashboard.tsx">
                         <div className="flex items-center space-x-2 mb-1" data-id="tkq5ytddm" data-path="src/components/WalletDashboard.tsx">
                           <Badge className={getTransactionTypeColor(tx.type)} data-id="38kjhkgt7" data-path="src/components/WalletDashboard.tsx">
                             {tx.type.toUpperCase()}
                           </Badge>
                           {tx.blockNumber &&
-                      <span className="text-sm text-gray-500" data-id="r5cnfbpme" data-path="src/components/WalletDashboard.tsx">Block #{tx.blockNumber}</span>
-                      }
+                            <span className="text-sm text-gray-500" data-id="r5cnfbpme" data-path="src/components/WalletDashboard.tsx">Block #{tx.blockNumber}</span>
+                          }
                         </div>
                         <div className="text-sm text-gray-600" data-id="i6plvmdtk" data-path="src/components/WalletDashboard.tsx">
-                          From: {tx.from.slice(0, 8)}...{tx.from.slice(-6)} → 
+                          From: {tx.from.slice(0, 8)}...{tx.from.slice(-6)} →
                           To: {tx.to.slice(0, 8)}...{tx.to.slice(-6)}
                         </div>
                         <div className="text-xs text-gray-500" data-id="p8qwqdc11" data-path="src/components/WalletDashboard.tsx">
@@ -219,21 +224,21 @@ const WalletDashboard: React.FC = () => {
                           {tx.amount.toFixed(4)} {tx.type === 'swap' && tx.from === wallet.address ? 'BNB' : 'BNB'}
                         </div>
                         {tx.reward &&
-                    <div className="text-sm text-green-600" data-id="vvxn2mzsf" data-path="src/components/WalletDashboard.tsx">
+                          <div className="text-sm text-green-600" data-id="vvxn2mzsf" data-path="src/components/WalletDashboard.tsx">
                             +{tx.reward.toFixed(4)} BM reward
                           </div>
-                    }
+                        }
                       </div>
                     </div>
-                )}
+                  )}
                 </div>
               }
             </TabsContent>
-            
+
             <TabsContent value="block" data-id="1qgwben62" data-path="src/components/WalletDashboard.tsx">
               <div className="space-y-3" data-id="ycqyetoit" data-path="src/components/WalletDashboard.tsx">
                 {transactions.filter((tx) => tx.type === 'block').map((tx) =>
-                <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="znkr1lmth" data-path="src/components/WalletDashboard.tsx">
+                  <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="znkr1lmth" data-path="src/components/WalletDashboard.tsx">
                     <div className="flex-1" data-id="83zvggsko" data-path="src/components/WalletDashboard.tsx">
                       <div className="flex items-center space-x-2 mb-1" data-id="16728lu3x" data-path="src/components/WalletDashboard.tsx">
                         <Badge className="bg-blue-100 text-blue-800" data-id="m9gr285xm" data-path="src/components/WalletDashboard.tsx">BLOCK</Badge>
@@ -256,11 +261,11 @@ const WalletDashboard: React.FC = () => {
                 )}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="swap" data-id="67ilx7v31" data-path="src/components/WalletDashboard.tsx">
               <div className="space-y-3" data-id="h5df3wtsg" data-path="src/components/WalletDashboard.tsx">
                 {transactions.filter((tx) => tx.type === 'swap').map((tx) =>
-                <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="zlc93q3dm" data-path="src/components/WalletDashboard.tsx">
+                  <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="zlc93q3dm" data-path="src/components/WalletDashboard.tsx">
                     <div className="flex-1" data-id="utm4momr9" data-path="src/components/WalletDashboard.tsx">
                       <Badge className="bg-green-100 text-green-800 mb-2" data-id="6zmitrejf" data-path="src/components/WalletDashboard.tsx">SWAP</Badge>
                       <div className="text-sm text-gray-600" data-id="2bdta3b3n" data-path="src/components/WalletDashboard.tsx">
@@ -277,11 +282,11 @@ const WalletDashboard: React.FC = () => {
                 )}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="withdraw" data-id="f9fge4lwe" data-path="src/components/WalletDashboard.tsx">
               <div className="space-y-3" data-id="ta5kp69m9" data-path="src/components/WalletDashboard.tsx">
                 {transactions.filter((tx) => tx.type === 'withdraw').map((tx) =>
-                <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="2ef92afpv" data-path="src/components/WalletDashboard.tsx">
+                  <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="2ef92afpv" data-path="src/components/WalletDashboard.tsx">
                     <div className="flex-1" data-id="px7ksmkb8" data-path="src/components/WalletDashboard.tsx">
                       <Badge className="bg-purple-100 text-purple-800 mb-2" data-id="07zhls2bv" data-path="src/components/WalletDashboard.tsx">WITHDRAWAL</Badge>
                       <div className="text-sm text-gray-600" data-id="qn42yt6fa" data-path="src/components/WalletDashboard.tsx">

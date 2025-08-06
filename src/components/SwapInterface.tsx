@@ -10,7 +10,11 @@ import { ArrowRightLeft, TrendingUp, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount } from '@reown/appkit/react';
 
-const SwapInterface: React.FC = () => {
+interface SwapInterfaceProps {
+  balance?: any;
+}
+
+const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
   const {
     wallet,
     bmTokens,
@@ -142,7 +146,7 @@ const SwapInterface: React.FC = () => {
         <Card data-id="rgrodf1fh" data-path="src/components/SwapInterface.tsx">
           <CardContent className="text-center py-4" data-id="g5k4l0eqz" data-path="src/components/SwapInterface.tsx">
             <div className="text-sm text-gray-600 mb-1" data-id="6sf7kwqva" data-path="src/components/SwapInterface.tsx">BNB Balance</div>
-            <div className="text-xl font-bold" data-id="i6qae2kfh" data-path="src/components/SwapInterface.tsx">{wallet?.bnbBalance?.toFixed(4)}</div>
+            <div className="text-xl font-bold" data-id="i6qae2kfh" data-path="src/components/SwapInterface.tsx">{balance?.data?.balance ? Number(balance?.data?.balance).toFixed(4) : 0}</div>
           </CardContent>
         </Card>
         <Card data-id="1eosn0lm6" data-path="src/components/SwapInterface.tsx">

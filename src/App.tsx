@@ -5,17 +5,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BlockMintProvider } from './contexts/BlockMintContext';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
-import BlockExplorer from './components/BlockExplorer';
-import TransactionForm from './components/TransactionForm';
-import WalletDashboard from './components/WalletDashboard';
-import Mining from './components/Mining';
-import SwapInterface from './components/SwapInterface';
-import ReferralSystem from './components/ReferralSystem';
-import Statistics from './components/Statistics';
+// import BlockExplorer from './components/BlockExplorer';
+// import TransactionForm from './components/TransactionForm';
+// import WalletDashboard from './components/WalletDashboard';
+// import Mining from './components/Mining';
+// import SwapInterface from './components/SwapInterface';
+// import ReferralSystem from './components/ReferralSystem';
+// import Statistics from './components/Statistics';
 import { ToastContainer } from 'react-toastify';
-import { useWriteContract } from "wagmi";
-import { parseUnits } from 'viem';
-import { useAppKitAccount } from '@reown/appkit/react';
+// import { useWriteContract } from "wagmi";
+// import { parseUnits } from 'viem';
+// import { useAppKitAccount } from '@reown/appkit/react';
 // Web3
 import { createAppKit } from '@reown/appkit/react'
 import { WagmiProvider } from 'wagmi'
@@ -58,7 +58,7 @@ const App = () => {
                 </div>     
                 <main className="flex-1 p-6 overflow-y-auto" data-id="j3qbmx7az" data-path="src/App.tsx">
                   {/* {renderContent()} */}
-                  <Home activeTab={activeTab} />
+                  <Home activeTab={activeTab} setActiveTab={setActiveTab} />
                 </main>
               </div>
             </div>
