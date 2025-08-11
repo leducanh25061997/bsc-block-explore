@@ -9,14 +9,15 @@ import { AddRefPayload, AuthParams } from '@/types/types';
 import { toast } from 'react-toastify';
 import { AnimatePresence, motion } from 'motion/react';
 import Sidebar from './Sidebar';
-
+import { signMessage } from "@wagmi/core";
+import { config } from '@/config';
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
 }
 
 const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
-  const { wallet, connectWallet, disconnectWallet, isTransactionTime, timeLeft } = useBlockMint();
+  const { wallet, connectWallet: _connectWallet, disconnectWallet, isTransactionTime, timeLeft } = useBlockMint();
   const { open } = useAppKit(); // AppKit hook to open the modal
   const { address, isConnected } = useAppKitAccount() // AppKit hook to get the address and check if the user is connected
   const loginMutation = useLoginMutation();
@@ -35,44 +36,64 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   };
 
   useEffect(() => {
-    if (isShowAlerConnect && isConnected && address) {
-      toast.success('Connect wallet success.', {
-        position: 'top-right',
-      });
-      const payload: AuthParams = { address };
-      try {
-        loginMutation.mutate(payload, {
-          onSuccess: (response: any) => {
-            if (response) {
-              // console.log(response, "response")
-              const refPayload: AddRefPayload = {
-                address,
-                ref: response?.userdata?.ref
-              };
-              addRefMutation.mutate(refPayload, {
-                onSuccess: (response) => {
-
-                },
-                onError: (err) => {
-                  toast.error(`${err?.message || "Invalid Data"} 👋`, {
-                    position: 'top-left',
-                  });
-                },
-              });
-              setIsShowAlerConnect(false)
-            }
-          },
-          onError: (err) => {
-            toast.error(`${err?.message || "Invalid Data"} 👋`, {
-              position: 'top-left',
-            });
-          },
-        });
-      } catch (error) {
-        console.log(error)
-      }
+    if (isConnected && address) {
+      handleSignMessage(address)
     }
-  }, [isConnected, address, isShowAlerConnect]);
+  }, [isConnected, address]);
+
+  const handleSignMessage = async (address: any) => {
+    try {
+      const result = await signMessage(config, {
+        account: address,
+        message: "bsc-block-explore",
+      });
+      console.log(result, 'result')
+      if (result) {
+        const signature = result.slice(2);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+   
+  }
+  // useEffect(() => {
+  //   if (isShowAlerConnect && isConnected && address) {
+  //     toast.success('Connect wallet success.', {
+  //       position: 'top-right',
+  //     });
+  //     const payload: AuthParams = { address };
+  //     try {
+  //       loginMutation.mutate(payload, {
+  //         onSuccess: (response: any) => {
+  //           if (response) {
+  //             const refPayload: AddRefPayload = {
+  //               address,
+  //               ref: response?.userdata?.ref
+  //             };
+  //             addRefMutation.mutate(refPayload, {
+  //               onSuccess: (response) => {
+
+  //               },
+  //               onError: (err) => {
+  //                 toast.error(`${err?.message || "Invalid Data"} 👋`, {
+  //                   position: 'top-left',
+  //                 });
+  //               },
+  //             });
+  //             setIsShowAlerConnect(false)
+  //           }
+  //         },
+  //         onError: (err) => {
+  //           toast.error(`${err?.message || "Invalid Data"} 👋`, {
+  //             position: 'top-left',
+  //           });
+  //         },
+  //       });
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // }, [isConnected, address, isShowAlerConnect]);
 
   const handleDisconnect = async () => {
     await disconnect();

@@ -2,9 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { BarChart3, TrendingUp, Activity, DollarSign, Users, Zap } from 'lucide-react';
+import { useQueryGetMainConfig } from '@/services/service';
 
 const Statistics: React.FC = () => {
   const { transactions, bmTokens, mining, referral } = useBlockMint();
+  const { data } = useQueryGetMainConfig() 
 
   // Calculate statistics
   const totalTransactionValue = transactions.
