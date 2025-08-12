@@ -15,6 +15,7 @@ import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
 import { useAddTransitionMutation } from '@/services/service';
 import { toast } from 'react-toastify';
+import useUserState from '@/stores/user';
 interface TransactionFormProps {
   selectedBlock?: string;
 }
@@ -81,7 +82,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const addTransitionMutation = useAddTransitionMutation();
-
+  const { userInfo } = useUserState();
   const [fromWallet, setFromWallet] = useState<string>('');
   const [toAddress, setToAddress] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -313,8 +314,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                   <SelectValue placeholder="Select sender wallet" data-id="q92rbx6w5" data-path="src/components/TransactionForm.tsx" />
                 </SelectTrigger>
                 <SelectContent data-id="yikb5wnvu" data-path="src/components/TransactionForm.tsx">
-                  <SelectItem value={address} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
-                    Connected Wallet ({address.slice(0, 8)}...{address.slice(-6)})
+                  <SelectItem value={userInfo?.secondAddress} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
+                    Connected Wallet ({userInfo?.secondAddress.slice(0, 8)}...{userInfo?.secondAddress.slice(-6)})
                     <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
                   </SelectItem>
                   {systemWallet &&

@@ -11,6 +11,9 @@ import { AnimatePresence, motion } from 'motion/react';
 import Sidebar from './Sidebar';
 import { signMessage } from "@wagmi/core";
 import { config } from '@/config';
+import useUserState from '@/stores/user';
+import { CookiesStorage } from '@/lib/cookie-storage';
+import { StorageKeys } from '@/constants/storage-keys';
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -27,6 +30,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
+  const { setUserInfo } = useUserState();
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -35,11 +39,11 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  useEffect(() => {
-    if (isConnected && address) {
-      handleSignMessage(address)
-    }
-  }, [isConnected, address]);
+  // useEffect(() => {
+  //   if (isConnected && address) {
+  //     handleSignMessage(address)
+  //   }
+  // }, [isConnected, address]);
 
   const handleSignMessage = async (address: any) => {
     try {
@@ -50,55 +54,63 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       console.log(result, 'result')
       if (result) {
         const signature = result.slice(2);
+        const payload = {
+          address,
+          r: "0x" + signature.substring(0, 64),
+          s: "0x" + signature.substring(64, 128),
+          v: "0x" + signature.substring(128, 130),
+        };
+        loginMutation.mutate(payload, {
+          onSuccess: (response: any) => {
+            if (response) {
+              // console.log(response?.userdata, "response")
+              const refPayload: AddRefPayload = {
+                address,
+                ref: response?.userdata?.ref
+              };
+              setUserInfo(response?.userdata);
+              CookiesStorage.setCookieData(StorageKeys.AddressToken, address);
+              CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
+              addRefMutation.mutate(refPayload, {
+                onSuccess: (response) => {
+                  
+                },
+                onError: (err) => {
+                  toast.error(`${err?.message || "Invalid Data"} 👋`, {
+                    position: 'top-left',
+                  });
+                },
+              });
+              setIsShowAlerConnect(false)
+            }
+          },
+          onError: (err) => {
+            toast.error(`${err?.message || "Invalid Data"} 👋`, {
+              position: 'top-left',
+            });
+          },
+        });
       }
     } catch (error) {
       console.log(error)
     }
    
   }
-  // useEffect(() => {
-  //   if (isShowAlerConnect && isConnected && address) {
-  //     toast.success('Connect wallet success.', {
-  //       position: 'top-right',
-  //     });
-  //     const payload: AuthParams = { address };
-  //     try {
-  //       loginMutation.mutate(payload, {
-  //         onSuccess: (response: any) => {
-  //           if (response) {
-  //             const refPayload: AddRefPayload = {
-  //               address,
-  //               ref: response?.userdata?.ref
-  //             };
-  //             addRefMutation.mutate(refPayload, {
-  //               onSuccess: (response) => {
-
-  //               },
-  //               onError: (err) => {
-  //                 toast.error(`${err?.message || "Invalid Data"} 👋`, {
-  //                   position: 'top-left',
-  //                 });
-  //               },
-  //             });
-  //             setIsShowAlerConnect(false)
-  //           }
-  //         },
-  //         onError: (err) => {
-  //           toast.error(`${err?.message || "Invalid Data"} 👋`, {
-  //             position: 'top-left',
-  //           });
-  //         },
-  //       });
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // }, [isConnected, address, isShowAlerConnect]);
+  
+  useEffect(() => {
+    if (isShowAlerConnect && isConnected && address) {
+      toast.success('Connect wallet success.', {
+        position: 'top-right',
+      });
+      handleSignMessage(address)
+    }
+  }, [isConnected, address, isShowAlerConnect]);
 
   const handleDisconnect = async () => {
+    CookiesStorage.clearSession();
     await disconnect();
     // Optionally, update UI or clear wallet info here
-    console.log('Wallet disconnected');
+    // console.log('Wallet disconnected');
   };
 
   return (

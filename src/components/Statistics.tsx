@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { BarChart3, TrendingUp, Activity, DollarSign, Users, Zap } from 'lucide-react';
-import { useQueryGetMainConfig } from '@/services/service';
+import { getMainConfig } from '@/services/service';
+import { IPlatformStatistics } from '@/types/types';
 
 const Statistics: React.FC = () => {
   const { transactions, bmTokens, mining, referral } = useBlockMint();
-  const { data } = useQueryGetMainConfig() 
+  const [ statistics, setStatistics ] = useState<IPlatformStatistics>();
+  console.log(statistics, "statistics")
+  
+  useEffect(() => {
+    fetchMainConfig()
+  }, []);
+
+  const fetchMainConfig = async () => {
+    const response = await getMainConfig();
+    setStatistics(response?.configdata)
+  }
 
   // Calculate statistics
   const totalTransactionValue = transactions.
@@ -38,7 +49,7 @@ const Statistics: React.FC = () => {
           <CardContent className="text-center py-6" data-id="x4qta61ft" data-path="src/components/Statistics.tsx">
             <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" data-id="wruvj92tt" data-path="src/components/Statistics.tsx" />
             <div className="text-2xl font-bold text-green-600" data-id="5v15pebzk" data-path="src/components/Statistics.tsx">
-              {totalTransactionValue.toFixed(4)}
+              {statistics?.totalTransaction ? statistics?.totalTransaction.toFixed(4) : 0}
             </div>
             <div className="text-sm text-gray-600" data-id="tw5gnnwug" data-path="src/components/Statistics.tsx">Total Transaction Value (BNB)</div>
           </CardContent>
