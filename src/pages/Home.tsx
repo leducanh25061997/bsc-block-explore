@@ -18,6 +18,9 @@ import { createAppKit } from '@reown/appkit/react'
 import { WagmiProvider } from 'wagmi'
 import { bsc, mainnet } from 'viem/chains';
 import { decimalMultiplication } from '@/utils/common';
+import { CookiesStorage } from '@/lib/cookie-storage';
+import { StorageKeys } from '@/constants/storage-keys';
+import useUserState from '@/stores/user';
 
 const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v: string) => void }) => {
   const [selectedBlock, setSelectedBlock] = useState<string | undefined>();
@@ -30,10 +33,13 @@ const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v
   const decimals = 6;
   const { fetchBalance } = useAppKitBalance();
   const [balance, setBalance] = useState(null);
+  const { setUserInfo } = useUserState(); 
 
   useEffect(() => {
     if (address) {
-        fetchBalance().then(setBalance);
+      const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
+      setUserInfo(userInfo)
+      fetchBalance().then(setBalance);
     }
 }, [address]);
 

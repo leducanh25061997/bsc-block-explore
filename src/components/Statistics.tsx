@@ -49,7 +49,7 @@ const Statistics: React.FC = () => {
           <CardContent className="text-center py-6" data-id="x4qta61ft" data-path="src/components/Statistics.tsx">
             <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" data-id="wruvj92tt" data-path="src/components/Statistics.tsx" />
             <div className="text-2xl font-bold text-green-600" data-id="5v15pebzk" data-path="src/components/Statistics.tsx">
-              {statistics?.totalTransaction ? statistics?.totalTransaction.toFixed(4) : 0}
+              {totalTransactionValue.toFixed(4)}
             </div>
             <div className="text-sm text-gray-600" data-id="tw5gnnwug" data-path="src/components/Statistics.tsx">Total Transaction Value (BNB)</div>
           </CardContent>

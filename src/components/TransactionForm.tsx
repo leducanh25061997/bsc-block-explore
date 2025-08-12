@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,7 @@ import { parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
-import { useAddTransitionMutation } from '@/services/service';
+import { sendTransaction, useAddTransitionMutation, useSendTransactionMutation } from '@/services/service';
 import { toast } from 'react-toastify';
 import useUserState from '@/stores/user';
 interface TransactionFormProps {
@@ -90,6 +90,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const [isLoading, setIsLoading] = useState(false);
   const decimals = 4;
   const { writeContractAsync, isPending } = useWriteContract();
+  const sendTransactionMutation = useSendTransactionMutation();
+
+  useEffect(() => {
+    if (address) {
+      setFromWallet(address);
+    }
+  }, [address])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,59 +150,70 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   };
 
   const handleTranfer = async () => {
-    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+    if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(fromWallet)) {
       return;
     }
-    await switchToBSC();
+    // await switchToBSC();
     try {
-      const txHash = await writeContractAsync({
-        account: address as `0x${string}`,
-        chain: bsc, // ✅ BẮT BUỘC
-        address: toAddress as `0x${string}`,
-        abi: [
-          {
-            name: 'transfer',
-            type: 'function',
-            stateMutability: 'nonpayable',
-            inputs: [
-              { name: '_to', type: 'address' },
-              { name: '_value', type: 'uint256' },
-            ],
-            outputs: [{ name: '', type: 'bool' }],
-          },
-        ],
-        functionName: 'transfer',
-        args: [
-          toAddress as `0x${string}`, 
-          // parseUnits(amount, decimals)
-          parseUnits(amount, decimalMultiplication())
-        ],
-      });
-      console.log(txHash, 'txHash')
-      if (txHash) {
-        addTransitionMutation.mutate(
-          {
-            address,
-            transaction: txHash
-          },
-          { 
-            onSuccess: () => {
-              toast({
-                title: "Transaction Successful",
-                description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
-              });
-            },
-            onError: error => {
-              console.log(error);
-              toast({
-                title: "Transaction Failed",
-                description: error instanceof Error ? error.message : "An error occurred",
-                variant: "destructive"
-              });
-            }
-          }
-        )
+      const payload = {
+        address: fromWallet,
+        toAddress: toAddress,
+        amount: amount,
+        r: userInfo.r,
+        s: userInfo.s,
+        v: userInfo.v
       }
+      const submitTransaction = await sendTransaction(payload);
+      console.log(submitTransaction, "submitTransaction")
+
+      // const txHash = await writeContractAsync({
+      //   account: address as `0x${string}`,
+      //   chain: bsc, // ✅ BẮT BUỘC
+      //   address: toAddress as `0x${string}`,
+      //   abi: [
+      //     {
+      //       name: 'transfer',
+      //       type: 'function',
+      //       stateMutability: 'nonpayable',
+      //       inputs: [
+      //         { name: '_to', type: 'address' },
+      //         { name: '_value', type: 'uint256' },
+      //       ],
+      //       outputs: [{ name: '', type: 'bool' }],
+      //     },
+      //   ],
+      //   functionName: 'transfer',
+      //   args: [
+      //     toAddress as `0x${string}`, 
+      //     // parseUnits(amount, decimals)
+      //     parseUnits(amount, decimalMultiplication())
+      //   ],
+      // });
+      // console.log(txHash, 'txHash')
+      // if (txHash) {
+      //   addTransitionMutation.mutate(
+      //     {
+      //       address,
+      //       transaction: txHash
+      //     },
+      //     { 
+      //       onSuccess: () => {
+      //         toast({
+      //           title: "Transaction Successful",
+      //           description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
+      //         });
+      //       },
+      //       onError: error => {
+      //         console.log(error);
+      //         toast({
+      //           title: "Transaction Failed",
+      //           description: error instanceof Error ? error.message : "An error occurred",
+      //           variant: "destructive"
+      //         });
+      //       }
+      //     }
+      //   )
+      // }
     } catch (error) {
       console.log(error);
       toast({
@@ -318,12 +336,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                     Connected Wallet ({userInfo?.secondAddress.slice(0, 8)}...{userInfo?.secondAddress.slice(-6)})
                     <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
                   </SelectItem>
-                  {systemWallet &&
+                  {/* {systemWallet &&
                   <SelectItem value={systemWallet.address} data-id="w9vdwjofn" data-path="src/components/TransactionForm.tsx">
                       System Wallet ({systemWallet.address.slice(0, 8)}...{systemWallet.address.slice(-6)})
                       <Badge variant="default" className="ml-2" data-id="5z4lhds0z" data-path="src/components/TransactionForm.tsx">Unlimited</Badge>
                     </SelectItem>
-                  }
+                  } */}
                 </SelectContent>
               </Select>
             </div>
