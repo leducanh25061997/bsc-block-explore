@@ -8,7 +8,7 @@ import { Wallet, Lock, Unlock, TrendingUp, History, Download } from 'lucide-reac
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount, useAppKitBalance } from '@reown/appkit/react';
 import useUserState from '@/stores/user';
-
+import { ethers } from "ethers";
 interface WalletDashboardProps {
   balance?: any;
 }
@@ -24,6 +24,30 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const { userInfo } = useUserState();
+  const [gereralBalance, setGereralBalance] = useState<any>(0)
+
+  // Sử dụng URL của một node BSC công khai
+  const bscProviderUrl = "https://bsc-dataseed.binance.org/";
+
+  const provider = new ethers.JsonRpcProvider(bscProviderUrl);
+
+  useEffect(() => {
+    if (userInfo?.secondAddress) {
+      getBnbBalance(userInfo?.secondAddress)
+    }
+   }, [userInfo])
+
+  async function getBnbBalance(walletAddress: string) {
+    try {
+      const balance = await provider.getBalance(walletAddress);
+      // Chuyển đổi từ wei sang BNB
+      const balanceInBnb = ethers.formatEther(balance);
+      setGereralBalance(balanceInBnb);
+      console.log(`Số dư BNB của ví ${walletAddress} là: ${balanceInBnb} BNB`);
+    } catch (error) {
+      console.error("Lỗi khi lấy số dư BNB:", error);
+    }
+  }
 
   const handleWithdraw = async () => {
     if (!systemWallet) return;
@@ -123,7 +147,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
             </div> */}
             <div className="flex justify-between items-center" data-id="vxopocere" data-path="src/components/WalletDashboard.tsx">
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
-              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{balance?.data?.balance ? Number(balance?.data?.balance).toFixed(4) : 0} BNB</span>
+              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{gereralBalance} BNB</span>
             </div>
             <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
               Transaction Limit: 100 USDT
