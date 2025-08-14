@@ -235,7 +235,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 </div>
                 <button onClick={closeSidebar} className="text-2xl">×</button>
               </div>
-              <Sidebar activeTab={activeTab} onTabChange={onTabChange} />
+              <Sidebar activeTab={activeTab} onTabChange={onTabChange} closeSidebar={closeSidebar} />
               <div className=''>
                 <Button
                   variant="outline"

@@ -7,6 +7,7 @@ import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Wallet, Lock, Unlock, TrendingUp, History, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount, useAppKitBalance } from '@reown/appkit/react';
+import useUserState from '@/stores/user';
 
 interface WalletDashboardProps {
   balance?: any;
@@ -22,6 +23,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   } = useBlockMint();
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
+  const { userInfo } = useUserState();
 
   const handleWithdraw = async () => {
     if (!systemWallet) return;
@@ -86,9 +88,39 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3" data-id="0mjv95ywr" data-path="src/components/WalletDashboard.tsx">
-            <div className="font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+            <div className="hidden md:flex font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
               {address}
             </div>
+            <div className="flex md:hidden font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+              {address.slice(0, 6)}...{address.slice(-4)}
+            </div>
+            <div className="flex justify-between items-center" data-id="vxopocere" data-path="src/components/WalletDashboard.tsx">
+              <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
+              <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{balance?.data?.balance ? Number(balance?.data?.balance).toFixed(4) : 0} BNB</span>
+            </div>
+            <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
+              Transaction Limit: 100 USDT
+            </Badge>
+          </CardContent>
+        </Card>
+
+        <Card data-id="9lmk7rqc1" data-path="src/components/WalletDashboard.tsx">
+          <CardHeader data-id="3wo90qygm" data-path="src/components/WalletDashboard.tsx">
+            <CardTitle className="flex items-center" data-id="smn68iz7i" data-path="src/components/WalletDashboard.tsx">
+              <Wallet className="w-5 h-5 mr-2" data-id="qkbgk959f" data-path="src/components/WalletDashboard.tsx" />
+              General Wallet
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3" data-id="0mjv95ywr" data-path="src/components/WalletDashboard.tsx">
+            <div className="hidden md:flex font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+              {userInfo?.secondAddress}
+            </div>
+            <div className="flex md:hidden font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+              {userInfo?.secondAddress.slice(0, 6)}...{userInfo?.secondAddress.slice(-4)}
+            </div>
+            {/* <div className="font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+              {userInfo?.secondAddress}
+            </div> */}
             <div className="flex justify-between items-center" data-id="vxopocere" data-path="src/components/WalletDashboard.tsx">
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
               <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{balance?.data?.balance ? Number(balance?.data?.balance).toFixed(4) : 0} BNB</span>

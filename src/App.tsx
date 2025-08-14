@@ -44,7 +44,8 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('blocks');
-
+  const [isOpen, setIsOpen] = useState(false);
+  
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig}>
       <QueryClientProvider client={queryClient} data-id="1qvn1tzwc" data-path="src/App.tsx">

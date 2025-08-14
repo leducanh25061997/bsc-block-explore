@@ -14,9 +14,10 @@ import {
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  closeSidebar?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, closeSidebar }) => {
   const menuItems = [
   { id: 'blocks', label: 'Block Explorer', icon: Blocks },
   { id: 'transaction', label: 'Create Transaction', icon: Send },
@@ -42,8 +43,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' :
                 'text-gray-300 hover:text-white hover:bg-gray-800'}`
                 }
-                onClick={() => onTabChange(item.id)} data-id="ns6hv11ud" data-path="src/components/Sidebar.tsx">
-
+                onClick={() => {
+                  if (closeSidebar) closeSidebar();
+                  onTabChange(item.id)
+                }} 
+                data-id="ns6hv11ud" data-path="src/components/Sidebar.tsx"
+              >
                 <Icon className="w-5 h-5 mr-3" data-id="1ryj8ydqj" data-path="src/components/Sidebar.tsx" />
                 {item.label}
               </Button>);
