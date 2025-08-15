@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBlockMint } from '@/contexts/BlockMintContext';
-import { Wallet, Lock, Unlock, TrendingUp, History, Download } from 'lucide-react';
+import { Wallet, Lock, Unlock, TrendingUp, History, Download, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount, useAppKitBalance } from '@reown/appkit/react';
 import useUserState from '@/stores/user';
@@ -35,7 +35,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
     if (userInfo?.secondAddress) {
       getBnbBalance(userInfo?.secondAddress)
     }
-   }, [userInfo])
+  }, [userInfo])
 
   async function getBnbBalance(walletAddress: string) {
     try {
@@ -81,6 +81,18 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
     }
   };
 
+  const handleCopyText = async (addressWallet: string) => {
+    try {
+      await navigator.clipboard.writeText(addressWallet);
+      toast({
+        title: "Copy address Successful",
+      });
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+
   if (!address && !isConnected) {
     return (
       <Card className="max-w-4xl mx-auto" data-id="uhlu7j5dw" data-path="src/components/WalletDashboard.tsx">
@@ -112,11 +124,21 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3" data-id="0mjv95ywr" data-path="src/components/WalletDashboard.tsx">
-            <div className="hidden md:flex font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+            <div className="hidden md:flex justify-between items-center font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
               {address}
+              <button
+                onClick={() => handleCopyText(address)}
+              >
+                <Copy />
+              </button>
             </div>
-            <div className="flex md:hidden font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+            <div className="flex justify-between items-center md:hidden font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
               {address.slice(0, 6)}...{address.slice(-4)}
+              <button
+                onClick={() => handleCopyText(address)}
+              >
+                <Copy />
+              </button>
             </div>
             <div className="flex justify-between items-center" data-id="vxopocere" data-path="src/components/WalletDashboard.tsx">
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
@@ -136,11 +158,21 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3" data-id="0mjv95ywr" data-path="src/components/WalletDashboard.tsx">
-            <div className="hidden md:flex font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+            <div className="hidden md:flex justify-between items-center font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
               {userInfo?.secondAddress}
+              <button
+                onClick={() => handleCopyText(userInfo?.secondAddress)}
+              >
+                <Copy />
+              </button>
             </div>
-            <div className="flex md:hidden font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
+            <div className="flex justify-between items-center md:hidden font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
               {userInfo?.secondAddress.slice(0, 6)}...{userInfo?.secondAddress.slice(-4)}
+              <button
+                onClick={() => handleCopyText(userInfo?.secondAddress)}
+              >
+                <Copy />
+              </button>
             </div>
             {/* <div className="font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
               {userInfo?.secondAddress}
@@ -150,7 +182,8 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
               <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{gereralBalance} BNB</span>
             </div>
             <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
-              Transaction Limit: 100 USDT
+              {/* Transaction Limit: 100 USDT */}
+              Unlimitted
             </Badge>
           </CardContent>
         </Card>
