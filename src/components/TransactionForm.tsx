@@ -14,12 +14,16 @@ import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
 import { getRegister, sendTransaction, useAddTransitionMutation, useSendRegisterMutation, useSendTransactionMutation } from '@/services/service';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import useUserState from '@/stores/user';
 import { useDisableButtonByTime } from '@/hooks/useDisableButtonByTime';
 import { IRegister, IRegisterPayload } from '@/types/types';
+import { toast as ToastCus } from 'react-toastify';
+import { StorageKeys } from '@/constants/storage-keys';
+import { CookiesStorage } from '@/lib/cookie-storage';
 interface TransactionFormProps {
   selectedBlock?: string;
+  setActiveTab: (v: string) => void;
 }
 
 const bsc = defineChain({
@@ -91,7 +95,7 @@ function hasTodayData(arr?: Array<IRegister>): boolean {
 }
 
 
-const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
+const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setActiveTab }) => {
   // console.log(selectedBlock, "selectedBlock")
   // const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
   const { toast } = useToast();
@@ -108,8 +112,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const sendTransactionMutation = useSendTransactionMutation();
   const { isDisabled } = useDisableButtonByTime(7, 19);
   const [registerValue, setRegisterValue] = useState<Array<IRegister>>([]);
-  console.log(registerValue, "registerValue");
-  console.log(hasTodayData(registerValue));
+  // console.log(registerValue, "registerValue");
+  // console.log(hasTodayData(registerValue));
   const sendRegisterMutation = useSendRegisterMutation();
 
   useEffect(() => {
@@ -198,15 +202,25 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
         payload, 
         {
           onSuccess: (res) => {
-            console.log(res?.tradeReg, "res?.tradeReg")
+            // console.log(res?.tradeReg, "res?.tradeReg")
+            ToastCus.success('Connect wallet success.', {
+              position: 'top-right',
+            });
             if (res?.tradeReg?.length) {
-              setRegisterValue(prev => [...prev, ...res.tradeReg]);
+              CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(res.tradeReg[0]));
+              setActiveTab("blocks")
+              // setRegisterValue(prev => [...prev, ...res.tradeReg]);
             }
           }
         }
       )
     }
-  }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onlyNumbers = e.target.value.replace(/\D/g, "");
+    setAmount(onlyNumbers);
+  };
 
   const handleTranfer = async () => {
     if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(fromWallet)) {
@@ -427,7 +441,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                 min="0.001"
                 placeholder="0.0"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={handleChange}
                 required data-id="x45f0n2k7" data-path="src/components/TransactionForm.tsx" />
 
               {/* {fromWallet === wallet?.address &&
@@ -459,7 +473,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                 }
               }}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
-              disabled={hasTodayData(registerValue)} 
+              disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)} 
               data-id="y516kwf8c" 
               data-path="src/components/TransactionForm.tsx"
             >

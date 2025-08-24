@@ -35,6 +35,7 @@ export interface IUser {
   v: string;
   s: string;
   _id: string;
+  isAuto: boolean;
 }
 
 export interface IPlatformStatistics {
@@ -89,4 +90,13 @@ export interface IBlock {
   tnx: number;
   createdAt: string;
   updatedAt: string;
+  amount: number;
+}
+
+export interface IMinningPayload {
+  address: string;
+  isAuto: boolean;
+  r: string;
+  s: string;
+  v: string;
 }

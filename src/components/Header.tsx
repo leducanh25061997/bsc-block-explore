@@ -30,7 +30,8 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
-  const { setUserInfo } = useUserState();
+  const { setUserInfo, setTradeReg } = useUserState();
+
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -51,7 +52,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         account: address,
         message: "bsc-block-explore",
       });
-      console.log(result, 'result')
+      // console.log(result, 'result')
       if (result) {
         const signature = result.slice(2);
         const payload = {
@@ -70,6 +71,10 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
               };
               setUserInfo(response?.userdata);
               CookiesStorage.setCookieData(StorageKeys.AddressToken, address);
+              if (response?.tradeReg?.length > 0) {
+                setTradeReg(response?.tradeReg[0])
+                CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(response?.tradeReg[0]));
+              }
               CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
@@ -85,9 +90,9 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
             }
           },
           onError: (err) => {
-            toast.error(`${err?.message || "Invalid Data"} 👋`, {
-              position: 'top-left',
-            });
+            // toast.error(`${err?.message || "Invalid Data"} 👋`, {
+            //   position: 'top-left',
+            // });
           },
         });
       }

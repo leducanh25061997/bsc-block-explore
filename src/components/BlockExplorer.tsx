@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
-import { Clock, Hash, Activity } from 'lucide-react';
+import { Clock, Hash, Activity, User } from 'lucide-react';
 import { IBlock } from '@/types/types';
 import { getBlocks } from '@/services/service';
 import moment from "moment"
+import useUserState from '@/stores/user';
 
 interface BlockExplorerProps {
   onSelectBlock: (blockNumber: string, hash: string) => void;
@@ -14,6 +15,8 @@ interface BlockExplorerProps {
 }
 
 const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock, blocks }) => {
+  const { userInfo, tradeReg } = useUserState();
+  // console.log(tradeReg, "tradeReg")
   // const { blocks } = useBlockMint();
 
 
@@ -40,10 +43,17 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock, blocks }) 
                 <CardTitle className="text-lg font-semibold text-gray-800" data-id="9x0nob0e3" data-path="src/components/BlockExplorer.tsx">
                   Block #{block.number}
                 </CardTitle>
-                <Badge variant="secondary" className={`${block.status === "lock" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`} data-id="a76cpu3mg" data-path="src/components/BlockExplorer.tsx">
-                  <Activity className="w-3 h-3 mr-1" data-id="hy0z067hp" data-path="src/components/BlockExplorer.tsx" />
-                  {block.tnx} txns
-                </Badge>
+                <div className=''>
+                  <Badge variant="secondary" className={`${block.status === "lock" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`} data-id="a76cpu3mg" data-path="src/components/BlockExplorer.tsx">
+                    <User className="w-3 h-3 mr-1" data-id="hy0z067hp" data-path="src/components/BlockExplorer.tsx" />
+                    {block.amount}
+                  </Badge>
+                  {"/"}
+                  <Badge variant="secondary" className={`${block.status === "lock" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`} data-id="a76cpu3mg" data-path="src/components/BlockExplorer.tsx">
+                    <Activity className="w-3 h-3 mr-1" data-id="hy0z067hp" data-path="src/components/BlockExplorer.tsx" />
+                    {block.tnx} txns
+                  </Badge>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-3" data-id="mqc5i6jkf" data-path="src/components/BlockExplorer.tsx">
@@ -57,14 +67,23 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock, blocks }) 
                     {block.hash}
                   </div>
                 </div>
-                <div className="space-y-2" data-id="wpri7z3bm" data-path="src/components/BlockExplorer.tsx">
-                  <div className="flex items-center text-sm text-gray-600" data-id="5ujf9lo36" data-path="src/components/BlockExplorer.tsx">
-                    <Clock className="w-4 h-4 mr-2" data-id="tyih3xhjo" data-path="src/components/BlockExplorer.tsx" />
-                    <span className="font-medium" data-id="yxnwytwmm" data-path="src/components/BlockExplorer.tsx">Timestamp:</span>
+                <div className="space-y-2 flex flex-row justify-between" data-id="wpri7z3bm" data-path="src/components/BlockExplorer.tsx">
+                  <div className=''>
+                    <div className="flex items-center text-sm text-gray-600" data-id="5ujf9lo36" data-path="src/components/BlockExplorer.tsx">
+                      <Clock className="w-4 h-4 mr-2" data-id="tyih3xhjo" data-path="src/components/BlockExplorer.tsx" />
+                      <span className="font-medium" data-id="yxnwytwmm" data-path="src/components/BlockExplorer.tsx">Timestamp:</span>
+                    </div>
+                    <div className="text-sm" data-id="xiyw0hg20" data-path="src/components/BlockExplorer.tsx">
+                      {moment(block.createdAt).format("DD/mm/yyyy")}
+                    </div>
                   </div>
-                  <div className="text-sm" data-id="xiyw0hg20" data-path="src/components/BlockExplorer.tsx">
-                    {moment(block.createdAt).format("DD/mm/yyyy")}
-                  </div>
+                  {tradeReg?.block === Number(block.number) && (
+                    <div className='flex justify-between text-sm'>
+                      <p>Address:{" "}{tradeReg?.address.slice(0, 6)}...{tradeReg?.address.slice(-4)}</p>
+                      <p className='px-[4px]'>{"/"}</p>
+                      <p>Amount: {tradeReg.amount} BNB</p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="pt-2" data-id="zbtpuk163" data-path="src/components/BlockExplorer.tsx">

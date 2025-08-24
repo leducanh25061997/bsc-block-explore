@@ -7,6 +7,11 @@ import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Pickaxe, Zap, Clock, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount } from '@reown/appkit/react';
+import { useCreateMinningMutation } from '@/services/service';
+import useUserState from '@/stores/user';
+import { IMinningPayload } from '@/types/types';
+import { CookiesStorage } from '@/lib/cookie-storage';
+import { StorageKeys } from '@/constants/storage-keys';
 
 const Mining: React.FC = () => {
   const {
@@ -19,20 +24,51 @@ const Mining: React.FC = () => {
   } = useBlockMint();
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
+  const { userInfo, setUserInfo } = useUserState();
+  console.log(userInfo, "userInfo")
+  const createMinningMutation = useCreateMinningMutation();
+
+  const handleAutoMining = () => {
+    if (userInfo) {
+      const payload: IMinningPayload = {
+        address: userInfo.address,
+        isAuto: !userInfo.isAuto,
+        r: userInfo.r,
+        s: userInfo.s,
+        v: userInfo.v
+      }
+      createMinningMutation.mutate(payload,
+        {
+          onSuccess: (response: any) => {
+            if (response) {
+              setUserInfo(response?.userdata);
+              CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
+            }
+          }
+        }
+      )
+    }
+  }
 
   const handleMining = () => {
-    try {
-      performMining();
-      toast({
-        title: "Mining Successful",
-        description: `Mined ${mining.miningRate} BM tokens!`
-      });
-    } catch (error) {
-      toast({
-        title: "Mining Failed",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive"
-      });
+    if (userInfo) {
+      const payload: IMinningPayload = {
+        address: userInfo.address,
+        isAuto: false,
+        r: userInfo.r,
+        s: userInfo.s,
+        v: userInfo.v
+      }
+      createMinningMutation.mutate(payload,
+        {
+          onSuccess: (response: any) => {
+            if (response) {
+              setUserInfo(response?.userdata);
+              CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
+            }
+          }
+        }
+      )
     }
   };
 
@@ -76,22 +112,22 @@ const Mining: React.FC = () => {
           <CardContent className="space-y-4" data-id="vmgjbgury" data-path="src/components/Mining.tsx">
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg" data-id="0ywzg17gx" data-path="src/components/Mining.tsx">
               <div className="flex items-center justify-between mb-2" data-id="5ll1m2vst" data-path="src/components/Mining.tsx">
-                <span className="font-medium" data-id="a4zel76vm" data-path="src/components/Mining.tsx">Mining Rate:</span>
-                <span className="font-bold text-blue-600" data-id="bh3q3di15" data-path="src/components/Mining.tsx">{mining.miningRate} BM/session</span>
+                <span className="font-medium" data-id="a4zel76vm" data-path="src/components/Mining.tsx">Total BM Token Holdings:</span>
+                <span className="font-bold text-blue-600" data-id="bh3q3di15" data-path="src/components/Mining.tsx">{userInfo.coin.toFixed(6)} BM</span>
               </div>
               <div className="flex items-center justify-between mb-2" data-id="k2jgh50np" data-path="src/components/Mining.tsx">
-                <span className="font-medium" data-id="z7epu4fbg" data-path="src/components/Mining.tsx">Total Mined:</span>
-                <span className="font-semibold" data-id="6e8g7kzp4" data-path="src/components/Mining.tsx">{mining.totalMined.toFixed(4)} BM</span>
+                <span className="font-medium" data-id="z7epu4fbg" data-path="src/components/Mining.tsx">Total BM Beign Mined:</span>
+                <span className="font-semibold" data-id="6e8g7kzp4" data-path="src/components/Mining.tsx">{userInfo.coinLock.toFixed(6)} BM</span>
               </div>
-              <div className="flex items-center justify-between" data-id="ec6a1oafo" data-path="src/components/Mining.tsx">
+              {/* <div className="flex items-center justify-between" data-id="ec6a1oafo" data-path="src/components/Mining.tsx">
                 <span className="font-medium" data-id="xzkagnapj" data-path="src/components/Mining.tsx">Last Mined:</span>
                 <span className="text-sm text-gray-600" data-id="ell3nk8ip" data-path="src/components/Mining.tsx">
                   {mining.lastMined ? formatTime(mining.lastMined) : 'Never'}
                 </span>
-              </div>
+              </div> */}
             </div>
 
-            <div className="space-y-2" data-id="r3svmik71" data-path="src/components/Mining.tsx">
+            {/* <div className="space-y-2" data-id="r3svmik71" data-path="src/components/Mining.tsx">
               <div className="flex items-center justify-between" data-id="qo5cp3xgw" data-path="src/components/Mining.tsx">
                 <span className="text-sm font-medium" data-id="p80s1ikls" data-path="src/components/Mining.tsx">Daily Progress:</span>
                 <Badge variant={mining.dailyMiningCount === 2 ? "default" : "secondary"} data-id="v7myf1o14" data-path="src/components/Mining.tsx">
@@ -99,7 +135,7 @@ const Mining: React.FC = () => {
                 </Badge>
               </div>
               <Progress value={dailyProgress} className="w-full" data-id="238dn86fs" data-path="src/components/Mining.tsx" />
-            </div>
+            </div> */}
 
             <div className="bg-amber-50 p-3 rounded-lg border border-amber-200" data-id="bcxlga90t" data-path="src/components/Mining.tsx">
               <div className="flex items-center mb-2" data-id="md6zixkan" data-path="src/components/Mining.tsx">
@@ -107,7 +143,7 @@ const Mining: React.FC = () => {
                 <span className="text-sm font-medium text-amber-800" data-id="4haqivn4j" data-path="src/components/Mining.tsx">Mining Schedule</span>
               </div>
               <ul className="text-xs text-amber-700 space-y-1" data-id="np18hxfqz" data-path="src/components/Mining.tsx">
-                <li data-id="d5x3xb5v0" data-path="src/components/Mining.tsx">• 7:00 - 8:00 AM daily</li>
+                {/* <li data-id="d5x3xb5v0" data-path="src/components/Mining.tsx">• 7:00 - 8:00 AM daily</li> */}
                 <li data-id="c01s9imr5" data-path="src/components/Mining.tsx">• 7:00 - 8:00 PM daily</li>
                 <li data-id="9llkmr525" data-path="src/components/Mining.tsx">• Maximum 2 sessions per day</li>
               </ul>
@@ -115,15 +151,16 @@ const Mining: React.FC = () => {
 
             <Button
               onClick={handleMining}
-              disabled={!isTransactionTime || mining.dailyMiningCount >= 2}
+              // disabled={!isTransactionTime || mining.dailyMiningCount >= 2}
+              disabled={!userInfo?.isAuto && userInfo.coinLock > 0 ? true : false}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="z8q547rev" data-path="src/components/Mining.tsx">
 
               <Pickaxe className="w-4 h-4 mr-2" data-id="a07mxe6y5" data-path="src/components/Mining.tsx" />
               {mining.dailyMiningCount >= 2 ?
-              'Daily Limit Reached' :
-              isTransactionTime ?
-              'Mine BM Tokens' :
-              'Mining Window Closed'}
+                'Daily Limit Reached' :
+                isTransactionTime ?
+                  'Mine BM Tokens' :
+                  'Mining Window Closed'}
             </Button>
           </CardContent>
         </Card>
@@ -139,14 +176,14 @@ const Mining: React.FC = () => {
           <CardContent className="space-y-4" data-id="jeimidwsl" data-path="src/components/Mining.tsx">
             <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg" data-id="sw9mgf5h2" data-path="src/components/Mining.tsx">
               <div className="flex items-center justify-between mb-2" data-id="7jwe4r6pa" data-path="src/components/Mining.tsx">
-                <span className="font-medium" data-id="72haqmk7w" data-path="src/components/Mining.tsx">Auto Rate:</span>
+                <span className="font-medium" data-id="72haqmk7w" data-path="src/components/Mining.tsx">Total BM Token Holdings:</span>
                 <span className="font-bold text-green-600" data-id="1u50aajn2" data-path="src/components/Mining.tsx">
-                  {autoMiningRate.toFixed(6)} BM/hour
+                  {userInfo?.coin.toFixed(6)} BM
                 </span>
               </div>
               <div className="flex items-center justify-between mb-2" data-id="shgpqq44j" data-path="src/components/Mining.tsx">
-                <span className="font-medium" data-id="8x0zndsb0" data-path="src/components/Mining.tsx">Based On:</span>
-                <span className="font-semibold" data-id="pj47qzubz" data-path="src/components/Mining.tsx">{bmTokens.total.toFixed(4)} BM total</span>
+                <span className="font-medium" data-id="8x0zndsb0" data-path="src/components/Mining.tsx">Total BM Beign Mined:</span>
+                <span className="font-semibold" data-id="pj47qzubz" data-path="src/components/Mining.tsx">{userInfo.coinLock.toFixed(6)} BM</span>
               </div>
               <div className="text-xs text-gray-600" data-id="pqq39nn97" data-path="src/components/Mining.tsx">
                 Auto-mining rate is 0.1% of your total BM tokens per hour
@@ -154,18 +191,18 @@ const Mining: React.FC = () => {
             </div>
 
             {systemWallet ?
-            <div className="bg-green-50 p-3 rounded-lg border border-green-200" data-id="co82cexd2" data-path="src/components/Mining.tsx">
+              <div className="bg-green-50 p-3 rounded-lg border border-green-200" data-id="co82cexd2" data-path="src/components/Mining.tsx">
                 <div className="flex items-center mb-2" data-id="bpks6hjzo" data-path="src/components/Mining.tsx">
                   <TrendingUp className="w-4 h-4 text-green-600 mr-2" data-id="f1wksluz1" data-path="src/components/Mining.tsx" />
                   <span className="text-sm font-medium text-green-800" data-id="seh1607m6" data-path="src/components/Mining.tsx">System Wallet Active</span>
                 </div>
                 <p className="text-xs text-green-700" data-id="yvrdngw4a" data-path="src/components/Mining.tsx">
-                  Auto-mining is active! Your BM tokens are automatically increasing 
+                  Auto-mining is active! Your BM tokens are automatically increasing
                   based on your total balance.
                 </p>
               </div> :
 
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200" data-id="5n5hz2qji" data-path="src/components/Mining.tsx">
+              <div className="bg-gray-50 p-3 rounded-lg border border-gray-200" data-id="5n5hz2qji" data-path="src/components/Mining.tsx">
                 <div className="flex items-center mb-2" data-id="ayrwrzq1q" data-path="src/components/Mining.tsx">
                   <Clock className="w-4 h-4 text-gray-600 mr-2" data-id="494hq1u7h" data-path="src/components/Mining.tsx" />
                   <span className="text-sm font-medium text-gray-800" data-id="3xpezpsij" data-path="src/components/Mining.tsx">Auto-Mining Inactive</span>
@@ -189,6 +226,16 @@ const Mining: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            <Button
+              onClick={handleAutoMining}
+              // disabled={!isTransactionTime || mining.dailyMiningCount >= 2}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="z8q547rev" data-path="src/components/Mining.tsx">
+
+              {/* <Pickaxe className="w-4 h-4 mr-2" data-id="a07mxe6y5" data-path="src/components/Mining.tsx" /> */}
+              {!userInfo.isAuto ? "Auto Mining" : "Cancel Auto"}
+            </Button>
+
           </CardContent>
         </Card>
       </div>

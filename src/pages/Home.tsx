@@ -43,14 +43,18 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
   const decimals = 6;
   const { fetchBalance } = useAppKitBalance();
   const [balance, setBalance] = useState(null);
-  const { setUserInfo } = useUserState();
+  const { setUserInfo, setTradeReg } = useUserState();
   // const [blocks, setBlocks] = useState<Array<IBlock>>([]);
   // console.log("====>")
 
   useEffect(() => {
     if (address) {
       const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
-      setUserInfo(userInfo)
+      const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+      setUserInfo(userInfo);
+      if (tradeRed) {
+        setTradeReg(tradeRed)
+      }
       fetchBalance().then(setBalance);
     }
   }, [address]);
@@ -100,7 +104,7 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
       case 'blocks':
         return <BlockExplorer onSelectBlock={handleSelectBlock} blocks={blocks} data-id="sbmvcyc5y" data-path="src/App.tsx" />;
       case 'transaction':
-        return <TransactionForm selectedBlock={selectedBlock} data-id="kd9ov61g3" data-path="src/App.tsx" />;
+        return <TransactionForm setActiveTab={setActiveTab} selectedBlock={selectedBlock} data-id="kd9ov61g3" data-path="src/App.tsx" />;
       case 'wallet':
         return <WalletDashboard data-id="razaddntj" data-path="src/App.tsx" balance={balance} />;
       case 'mining':
