@@ -24,7 +24,8 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const { userInfo } = useUserState();
-  const [gereralBalance, setGereralBalance] = useState<any>(0)
+  const [gereralBalance, setGereralBalance] = useState<any>(0);
+  console.log(userInfo, "userInfo")
 
   // Sử dụng URL của một node BSC công khai
   const bscProviderUrl = "https://bsc-dataseed.binance.org/";
@@ -228,7 +229,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="a4kzgb9z2" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-blue-600" data-id="tediqjmu5" data-path="src/components/WalletDashboard.tsx">
-              {bmTokens.total.toFixed(4)}
+              {userInfo.coin}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="nis60iwjl" data-path="src/components/WalletDashboard.tsx">Total earned BM tokens</p>
           </CardContent>
@@ -243,7 +244,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="pvrp5wkfb" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-green-600" data-id="m8usadu39" data-path="src/components/WalletDashboard.tsx">
-              {bmTokens.unlocked.toFixed(4)}
+              {userInfo.coin - userInfo.coinLock}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="fvuyddky8" data-path="src/components/WalletDashboard.tsx">Available for trading</p>
           </CardContent>
@@ -258,7 +259,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="wv1t9ecmb" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-orange-600" data-id="m7bxao2ua" data-path="src/components/WalletDashboard.tsx">
-              {bmTokens.locked.toFixed(4)}
+              {userInfo.coinLock}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="b41dskuhl" data-path="src/components/WalletDashboard.tsx">Unlocking over 60 days</p>
           </CardContent>
