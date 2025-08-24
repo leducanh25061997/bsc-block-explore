@@ -92,7 +92,7 @@ function hasTodayData(arr?: Array<IRegister>): boolean {
 
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
-  console.log(selectedBlock, "selectedBlock")
+  // console.log(selectedBlock, "selectedBlock")
   // const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
@@ -107,8 +107,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const { writeContractAsync, isPending } = useWriteContract();
   const sendTransactionMutation = useSendTransactionMutation();
   const { isDisabled } = useDisableButtonByTime(7, 19);
-  const [registerValue, setRegisterValue] = useState<Array<IRegister>>([])
-  // console.log(registerValue?.length ? hasTodayData(registerValue) : '==== NO DATA');
+  const [registerValue, setRegisterValue] = useState<Array<IRegister>>([]);
+  console.log(registerValue, "registerValue");
+  console.log(hasTodayData(registerValue));
   const sendRegisterMutation = useSendRegisterMutation();
 
   useEffect(() => {
@@ -126,9 +127,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
 
   const fetchFetchRegister = async (value: string) => {
     const response = await getRegister({ address: value});
-    console.log(response, "response")
-    if (response?.data?.tradeReg?.length) {
-      setRegisterValue(response?.data?.tradeReg)
+    // console.log(response, "response")
+    if (response?.tradeReg?.length) {
+      setRegisterValue(response?.tradeReg)
     }
   }
 
@@ -196,8 +197,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
       sendRegisterMutation.mutate(
         payload, 
         {
-          onSuccess: () => {
-            
+          onSuccess: (res) => {
+            console.log(res?.tradeReg, "res?.tradeReg")
+            if (res?.tradeReg?.length) {
+              setRegisterValue(prev => [...prev, ...res.tradeReg]);
+            }
           }
         }
       )
@@ -447,15 +451,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
               // type="submit"
               onClick={() => {
                 if (isDisabled) {
-                  if (hasTodayData) {
+                  if (!hasTodayData(registerValue)) {
                     handleRegister()
                   }
                 } else {
                   handleTranfer()
                 }
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 mt-4"
-              // disabled={hasTodayData ? false : true} 
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
+              disabled={hasTodayData(registerValue)} 
               data-id="y516kwf8c" 
               data-path="src/components/TransactionForm.tsx"
             >

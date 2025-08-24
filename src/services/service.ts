@@ -9,8 +9,8 @@ export const addTransition = (data: AddTransitionPayload) => request.post(API_UR
 export const getMainConfig = (): Promise<{ configdata: IPlatformStatistics }> => request.post(API_URL + '/getMainConfig');
 export const getHistory = () => request.post(API_URL + '/history');
 export const sendTransaction = (data: any) => request.post(API_URL + '/sendTransaction', data);
-export const register = (data: IRegisterPayload): Promise<{ data:{ tradeReg: Array<IRegister> }}> => request.post(API_URL + '/register', data);
-export const getRegister = (data: IGetRegisterPayload): Promise<{ data:{ tradeReg: Array<IRegister> }}> => request.post(API_URL + '/getRegister', data);
+export const register = (data: IRegisterPayload): Promise<{ tradeReg: Array<IRegister> }> => request.post(API_URL + '/register', data);
+export const getRegister = (data: IGetRegisterPayload): Promise<{ tradeReg: Array<IRegister> }> => request.post(API_URL + '/getRegister', data);
 export const getBlocks = (): Promise<{blocks: Array<IBlock> }> => request.post(API_URL + '/getBlocks');
 
 // Mutation
