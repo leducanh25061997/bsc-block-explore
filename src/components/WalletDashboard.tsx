@@ -25,7 +25,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const { address, isConnected } = useAppKitAccount();
   const { userInfo } = useUserState();
   const [gereralBalance, setGereralBalance] = useState<any>(0);
-  console.log(userInfo, "userInfo")
+  // console.log(userInfo, "userInfo")
 
   // Sử dụng URL của một node BSC công khai
   const bscProviderUrl = "https://bsc-dataseed.binance.org/";

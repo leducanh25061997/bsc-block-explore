@@ -9,6 +9,12 @@ import { useBlockMint } from '@/contexts/BlockMintContext';
 import { ArrowRightLeft, TrendingUp, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount } from '@reown/appkit/react';
+import useUserState from '@/stores/user';
+import { useSwapMutation } from '@/services/service';
+import { ISwap } from '@/types/types';
+import { toast as Toast } from 'react-toastify';
+import { CookiesStorage } from '@/lib/cookie-storage';
+import { StorageKeys } from '@/constants/storage-keys';
 
 interface SwapInterfaceProps {
   balance?: any;
@@ -27,65 +33,111 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
   const [bnbAmount, setBnbAmount] = useState<string>('');
   const [bmAmount, setBmAmount] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const { userInfo, setUserInfo } = useUserState();
+  const swapMutation = useSwapMutation()
 
-  const BM_PRICE = 0.6; // 0.6 USDT per BM token
+  const BM_PRICE = 100; // 0.6 USDT per BM token
 
-  const handleBNBToBM = async () => {
-    if (!bnbAmount || parseFloat(bnbAmount) <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid BNB amount.",
-        variant: "destructive"
-      });
-      return;
-    }
+  // const handleBNBToBM = async () => {
+  //   if (!bnbAmount || parseFloat(bnbAmount) <= 0) {
+  //     toast({
+  //       title: "Invalid Amount",
+  //       description: "Please enter a valid BNB amount.",
+  //       variant: "destructive"
+  //     });
+  //     return;
+  //   }
 
-    setIsLoading(true);
-    try {
-      await swapBNBToBM(parseFloat(bnbAmount));
-      toast({
-        title: "Swap Successful",
-        description: `Swapped ${bnbAmount} BNB for ${(parseFloat(bnbAmount) / BM_PRICE).toFixed(4)} BM tokens.`
-      });
-      setBnbAmount('');
-    } catch (error) {
-      toast({
-        title: "Swap Failed",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   setIsLoading(true);
+  //   try {
+  //     await swapBNBToBM(parseFloat(bnbAmount));
+  //     toast({
+  //       title: "Swap Successful",
+  //       description: `Swapped ${bnbAmount} BNB for ${(parseFloat(bnbAmount) / BM_PRICE).toFixed(4)} BM tokens.`
+  //     });
+  //     setBnbAmount('');
+  //   } catch (error) {
+  //     toast({
+  //       title: "Swap Failed",
+  //       description: error instanceof Error ? error.message : "An error occurred",
+  //       variant: "destructive"
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleBMToBNB = async () => {
-    if (!bmAmount || parseFloat(bmAmount) <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid BM amount.",
-        variant: "destructive"
-      });
-      return;
-    }
+    // if (!bmAmount || parseFloat(bmAmount) <= 0) {
+    //   toast({
+    //     title: "Invalid Amount",
+    //     description: "Please enter a valid BM amount.",
+    //     variant: "destructive"
+    //   });
+    //   return;
+    // }
+
+    if (!userInfo) return;
 
     setIsLoading(true);
-    try {
-      await swapBMToBNB(parseFloat(bmAmount));
-      toast({
-        title: "Swap Successful",
-        description: `Swapped ${bmAmount} BM for ${(parseFloat(bmAmount) * BM_PRICE).toFixed(4)} BNB.`
-      });
-      setBmAmount('');
-    } catch (error) {
-      toast({
-        title: "Swap Failed",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
+
+    const payload: ISwap = {
+      address: userInfo.address,
+      amount: Number(bnbAmount),
+      r: userInfo.r,
+      s: userInfo.s,
+      v: userInfo.v
     }
+    swapMutation.mutate(
+      payload,
+      {
+        onSuccess: (response: any) => {
+          if (response) {
+            setUserInfo(response?.userdata);
+            CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
+          }
+          Toast.success('Swap Successful.', {
+            position: 'top-right',
+          });
+          setIsLoading(false);
+          setBmAmount('');
+        }
+      }
+    )
+    // try {
+    //   const payload: ISwap = {
+    //     address: userInfo.address,
+    //     amount: Number(bnbAmount),
+    //     r: userInfo.r,
+    //     s: userInfo.s,
+    //     v: userInfo.v
+    //   }
+    //   swapMutation.mutate(
+    //     payload,
+    //     {
+    //       onSuccess: () => {
+    //         Toast.success('Swap Successful.', {
+    //           position: 'top-right',
+    //         });
+    //         setBmAmount('');
+    //       }
+    //     }
+    //   )
+      // await swapBMToBNB(parseFloat(bmAmount));
+      // toast({
+      //   title: "Swap Successful",
+      //   description: `Swapped ${bmAmount} BM for ${(parseFloat(bmAmount) * BM_PRICE).toFixed(4)} BNB.`
+      // });
+      // setBmAmount('');
+    // } catch (error) {
+    //   toast({
+    //     title: "Swap Failed",
+    //     description: error instanceof Error ? error.message : "An error occurred",
+    //     variant: "destructive"
+    //   });
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   const calculateBMFromBNB = (bnb: string) => {
@@ -128,14 +180,14 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
           </CardTitle>
         </CardHeader>
         <CardContent data-id="4k36o775n" data-path="src/components/SwapInterface.tsx">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-id="h1zbz7c1p" data-path="src/components/SwapInterface.tsx">
-            <div className="text-center p-4 bg-blue-50 rounded-lg" data-id="oowkqaf1f" data-path="src/components/SwapInterface.tsx">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4" data-id="h1zbz7c1p" data-path="src/components/SwapInterface.tsx">
+            {/* <div className="text-center p-4 bg-blue-50 rounded-lg" data-id="oowkqaf1f" data-path="src/components/SwapInterface.tsx">
               <div className="text-2xl font-bold text-blue-600" data-id="ptfh908p2" data-path="src/components/SwapInterface.tsx">1 BM</div>
               <div className="text-gray-600" data-id="hznusdclv" data-path="src/components/SwapInterface.tsx">= 0.6 USDT</div>
-            </div>
+            </div> */}
             <div className="text-center p-4 bg-green-50 rounded-lg" data-id="b3tujohmf" data-path="src/components/SwapInterface.tsx">
               <div className="text-2xl font-bold text-green-600" data-id="tfeoxx35t" data-path="src/components/SwapInterface.tsx">1 BNB</div>
-              <div className="text-gray-600" data-id="qro1uiclc" data-path="src/components/SwapInterface.tsx">= {(1 / BM_PRICE).toFixed(2)} BM</div>
+              <div className="text-gray-600" data-id="qro1uiclc" data-path="src/components/SwapInterface.tsx">= {BM_PRICE} BM</div>
             </div>
           </div>
         </CardContent>
@@ -201,14 +253,15 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                     <div className="flex items-center justify-between" data-id="fwnj80iv5" data-path="src/components/SwapInterface.tsx">
                       <span data-id="27y040wzs" data-path="src/components/SwapInterface.tsx">You will receive:</span>
                       <span className="font-bold text-blue-600" data-id="gokgoa6nl" data-path="src/components/SwapInterface.tsx">
-                        {calculateBMFromBNB(bnbAmount)} BM
+                        {/* {calculateBMFromBNB(bnbAmount)} BM */}
+                        {"100"} BM
                       </span>
                     </div>
                   </div>
                 }
 
                 <Button
-                  onClick={handleBNBToBM}
+                  onClick={handleBMToBNB}
                   disabled={isLoading || !bnbAmount || parseFloat(bnbAmount) > wallet?.bnbBalance}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="apgwhrfg0" data-path="src/components/SwapInterface.tsx">
 
@@ -241,7 +294,8 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                     <div className="flex items-center justify-between" data-id="r5a7tbe4o" data-path="src/components/SwapInterface.tsx">
                       <span data-id="glz0js1n0" data-path="src/components/SwapInterface.tsx">You will receive:</span>
                       <span className="font-bold text-green-600" data-id="mf7td3dpw" data-path="src/components/SwapInterface.tsx">
-                        {calculateBNBFromBM(bmAmount)} BNB
+                        {/* {calculateBNBFromBM(bmAmount)} BNB */}
+                        {"100"} BM
                       </span>
                     </div>
                   </div>
@@ -249,7 +303,8 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
 
                 <Button
                   onClick={handleBMToBNB}
-                  disabled={isLoading || !bmAmount || parseFloat(bmAmount) > bmTokens.unlocked}
+                  // disabled={isLoading || !bmAmount || parseFloat(bmAmount) > bmTokens.unlocked}
+                  disabled={userInfo.coin > userInfo.coinLock ? false : true}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600" data-id="clxh2624h" data-path="src/components/SwapInterface.tsx">
 
                   <ArrowRightLeft className="w-4 h-4 mr-2" data-id="mq45jjxzg" data-path="src/components/SwapInterface.tsx" />

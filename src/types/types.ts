@@ -100,3 +100,10 @@ export interface IMinningPayload {
   s: string;
   v: string;
 }
+export interface ISwap {
+  address: string;
+  amount: number;
+  r: string;
+  s: string;
+  v: string;
+}

@@ -145,7 +145,7 @@ const Mining: React.FC = () => {
               <ul className="text-xs text-amber-700 space-y-1" data-id="np18hxfqz" data-path="src/components/Mining.tsx">
                 {/* <li data-id="d5x3xb5v0" data-path="src/components/Mining.tsx">• 7:00 - 8:00 AM daily</li> */}
                 <li data-id="c01s9imr5" data-path="src/components/Mining.tsx">• 7:00 - 8:00 PM daily</li>
-                <li data-id="9llkmr525" data-path="src/components/Mining.tsx">• Maximum 2 sessions per day</li>
+                {/* <li data-id="9llkmr525" data-path="src/components/Mining.tsx">• Maximum 2 sessions per day</li> */}
               </ul>
             </div>
 

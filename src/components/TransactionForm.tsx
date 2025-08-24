@@ -101,7 +101,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const addTransitionMutation = useAddTransitionMutation();
-  const { userInfo } = useUserState();
+  const { userInfo, setTradeReg } = useUserState();
   const [fromWallet, setFromWallet] = useState<string>('');
   const [toAddress, setToAddress] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -207,6 +207,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
               position: 'top-right',
             });
             if (res?.tradeReg?.length) {
+              setTradeReg(res.tradeReg[0]);
               CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(res.tradeReg[0]));
               setActiveTab("blocks")
               // setRegisterValue(prev => [...prev, ...res.tradeReg]);

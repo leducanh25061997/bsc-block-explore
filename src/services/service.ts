@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants/common';
-import { AddRefPayload, AddTransitionPayload, AuthParams, IBlock, IGetRegister, IGetRegisterPayload, IMinningPayload, IPlatformStatistics, IRegister, IRegisterPayload, IUser } from '@/types/types';
+import { AddRefPayload, AddTransitionPayload, AuthParams, IBlock, IGetRegister, IGetRegisterPayload, IMinningPayload, IPlatformStatistics, IRegister, IRegisterPayload, ISwap, IUser } from '@/types/types';
 import { request } from '@/utils/request';
 import { useQuery, useMutation } from '@tanstack/react-query';
 
@@ -13,6 +13,7 @@ export const register = (data: IRegisterPayload): Promise<{ tradeReg: Array<IReg
 export const getRegister = (data: IGetRegisterPayload): Promise<{ tradeReg: Array<IRegister> }> => request.post(API_URL + '/getRegister', data);
 export const getBlocks = (): Promise<{blocks: Array<IBlock> }> => request.post(API_URL + '/getBlocks');
 export const createMinning = (data: IMinningPayload): Promise<{ userdata: IUser }> => request.post(API_URL + '/minning', data);
+export const swap = (data: ISwap): Promise<{ userdata: IUser }> => request.post(API_URL + '/swap', data);
 
 // Mutation
 export const useLoginMutation = () => useMutation({ mutationFn: login });
@@ -24,6 +25,7 @@ export const useSendTransactionMutation = () => useMutation({ mutationFn: sendTr
 export const useSendRegisterMutation = () => useMutation({ mutationFn: register });
 export const useCreateMinningMutation = () => useMutation({ mutationFn: createMinning });
 export const useSendGetRegisterMutation = () => useMutation({ mutationFn: getRegister });
+export const useSwapMutation = () => useMutation({ mutationFn: swap });
 
 // Query
 // export const useQueryGetMainConfig = (options = {}) => useQuery({ queryKey: ['GET_APY'], queryFn: () => getMainConfig(), ...options });

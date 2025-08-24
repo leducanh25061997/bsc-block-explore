@@ -15,8 +15,8 @@ interface BlockExplorerProps {
 }
 
 const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock, blocks }) => {
-  const { userInfo, tradeReg } = useUserState();
-  // console.log(tradeReg, "tradeReg")
+  const { tradeReg } = useUserState();
+  console.log(tradeReg, "tradeReg")
   // const { blocks } = useBlockMint();
 
 
