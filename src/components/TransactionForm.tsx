@@ -13,9 +13,11 @@ import { parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
-import { sendTransaction, useAddTransitionMutation, useSendTransactionMutation } from '@/services/service';
+import { getRegister, sendTransaction, useAddTransitionMutation, useSendRegisterMutation, useSendTransactionMutation } from '@/services/service';
 import { toast } from 'react-toastify';
 import useUserState from '@/stores/user';
+import { useDisableButtonByTime } from '@/hooks/useDisableButtonByTime';
+import { IRegister, IRegisterPayload } from '@/types/types';
 interface TransactionFormProps {
   selectedBlock?: string;
 }
@@ -77,8 +79,21 @@ const switchToBSC = async () => {
   }
 };
 
+
+function hasTodayData(arr?: Array<IRegister>): boolean {
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0]; // "2025-08-24"
+
+  return arr.some(item => {
+    const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
+    return itemDate === todayStr;
+  });
+}
+
+
 const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
-  const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
+  console.log(selectedBlock, "selectedBlock")
+  // const { wallet, systemWallet, createTransaction, isTransactionTime } = useBlockMint();
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const addTransitionMutation = useAddTransitionMutation();
@@ -91,56 +106,75 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
   const decimals = 4;
   const { writeContractAsync, isPending } = useWriteContract();
   const sendTransactionMutation = useSendTransactionMutation();
+  const { isDisabled } = useDisableButtonByTime(7, 19);
+  const [registerValue, setRegisterValue] = useState<Array<IRegister>>([])
+  // console.log(registerValue?.length ? hasTodayData(registerValue) : '==== NO DATA');
+  const sendRegisterMutation = useSendRegisterMutation();
 
   useEffect(() => {
     if (address) {
       setFromWallet(address);
+      fetchFetchRegister(address);
     }
   }, [address])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!selectedBlock) {
-      toast({
-        title: "No Block Selected",
-        description: "Please select a block from the Block Explorer first.",
-        variant: "destructive"
-      });
-      return;
+  useEffect(() => {
+    if (userInfo) {
+      setToAddress(userInfo.secondAddress)
     }
+  }, [userInfo]);
 
-    if (!isTransactionTime) {
-      toast({
-        title: "Transaction Window Closed",
-        description: "Transactions can only be made during 7-8 AM or 7-8 PM.",
-        variant: "destructive"
-      });
-      return;
+  const fetchFetchRegister = async (value: string) => {
+    const response = await getRegister({ address: value});
+    console.log(response, "response")
+    if (response?.data?.tradeReg?.length) {
+      setRegisterValue(response?.data?.tradeReg)
     }
+  }
 
-    setStep('confirm');
-  };
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-  const confirmTransaction = async () => {
-    setIsLoading(true);
-    try {
-      await createTransaction(fromWallet, toAddress, parseFloat(amount), selectedBlock!);
-      setStep('success');
-      toast({
-        title: "Transaction Successful",
-        description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
-      });
-    } catch (error) {
-      toast({
-        title: "Transaction Failed",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   if (!selectedBlock) {
+  //     toast({
+  //       title: "No Block Selected",
+  //       description: "Please select a block from the Block Explorer first.",
+  //       variant: "destructive"
+  //     });
+  //     return;
+  //   }
+
+  //   if (!isTransactionTime) {
+  //     toast({
+  //       title: "Transaction Window Closed",
+  //       description: "Transactions can only be made during 7-8 AM or 7-8 PM.",
+  //       variant: "destructive"
+  //     });
+  //     return;
+  //   }
+
+  //   setStep('confirm');
+  // };
+
+  // const confirmTransaction = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     await createTransaction(fromWallet, toAddress, parseFloat(amount), selectedBlock!);
+  //     setStep('success');
+  //     toast({
+  //       title: "Transaction Successful",
+  //       description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
+  //     });
+  //   } catch (error) {
+  //     toast({
+  //       title: "Transaction Failed",
+  //       description: error instanceof Error ? error.message : "An error occurred",
+  //       variant: "destructive"
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const resetForm = () => {
     setFromWallet('');
@@ -148,6 +182,27 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
     setAmount('');
     setStep('form');
   };
+
+  const handleRegister = () => {
+    if (userInfo && selectedBlock) {
+      const payload: IRegisterPayload = {
+        address: userInfo.address,
+        amount: Number(amount),
+        block: Number(selectedBlock),
+        r: userInfo.r,
+        s: userInfo.s,
+        v: userInfo.v
+      }
+      sendRegisterMutation.mutate(
+        payload, 
+        {
+          onSuccess: () => {
+            
+          }
+        }
+      )
+    }
+  }
 
   const handleTranfer = async () => {
     if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(fromWallet)) {
@@ -327,26 +382,20 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
           {/* <form onSubmit={handleSubmit} className="space-y-6" data-id="05p6tfiv2" data-path="src/components/TransactionForm.tsx"> */}
             <div className="space-y-2" data-id="t3zmkvl9i" data-path="src/components/TransactionForm.tsx">
               <Label htmlFor="fromWallet" data-id="bhqoauw50" data-path="src/components/TransactionForm.tsx">From Wallet</Label>
-              <Select value={fromWallet} onValueChange={setFromWallet} required data-id="rrvsmn3ld" data-path="src/components/TransactionForm.tsx">
+              <Select disabled value={fromWallet} onValueChange={setFromWallet} required data-id="rrvsmn3ld" data-path="src/components/TransactionForm.tsx">
                 <SelectTrigger data-id="2o56ub674" data-path="src/components/TransactionForm.tsx">
                   <SelectValue placeholder="Select sender wallet" data-id="q92rbx6w5" data-path="src/components/TransactionForm.tsx" />
                 </SelectTrigger>
                 <SelectContent data-id="yikb5wnvu" data-path="src/components/TransactionForm.tsx">
                   <SelectItem value={address} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
                     Connected Wallet ({address.slice(0, 8)}...{address.slice(-6)})
-                    <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
+                    {/* <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge> */}
                   </SelectItem>
 
                   <SelectItem value={userInfo?.secondAddress} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
                     Connected General Wallet ({userInfo?.secondAddress.slice(0, 8)}...{userInfo?.secondAddress.slice(-6)})
                     <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
                   </SelectItem>
-                  {/* {systemWallet &&
-                  <SelectItem value={systemWallet.address} data-id="w9vdwjofn" data-path="src/components/TransactionForm.tsx">
-                      System Wallet ({systemWallet.address.slice(0, 8)}...{systemWallet.address.slice(-6)})
-                      <Badge variant="default" className="ml-2" data-id="5z4lhds0z" data-path="src/components/TransactionForm.tsx">Unlimited</Badge>
-                    </SelectItem>
-                  } */}
                 </SelectContent>
               </Select>
             </div>
@@ -357,6 +406,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                 id="toAddress"
                 type="text"
                 placeholder="0x..."
+                disabled
                 value={toAddress}
                 onChange={(e) => setToAddress(e.target.value)}
                 required
@@ -376,11 +426,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
                 onChange={(e) => setAmount(e.target.value)}
                 required data-id="x45f0n2k7" data-path="src/components/TransactionForm.tsx" />
 
-              {fromWallet === wallet?.address &&
+              {/* {fromWallet === wallet?.address &&
               <p className="text-sm text-orange-600" data-id="mas58qe4x" data-path="src/components/TransactionForm.tsx">
                   ⚠️ Connected wallet limited to 100 USDT per transaction
                 </p>
-              }
+              } */}
             </div>
 
             <div className="bg-blue-50 p-4 rounded-lg mt-4" data-id="8k488onbl" data-path="src/components/TransactionForm.tsx">
@@ -395,14 +445,22 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock }) => {
 
             <Button
               // type="submit"
-              onClick={() => handleTranfer()}
+              onClick={() => {
+                if (isDisabled) {
+                  if (hasTodayData) {
+                    handleRegister()
+                  }
+                } else {
+                  handleTranfer()
+                }
+              }}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 mt-4"
-              // disabled={!isTransactionTime} 
+              // disabled={hasTodayData ? false : true} 
               data-id="y516kwf8c" 
               data-path="src/components/TransactionForm.tsx"
             >
 
-              {isTransactionTime ? "Next: Review Transaction" : "Trading Window Closed"}
+              {isDisabled ? "Register" : "Trading Window Closed"}
             </Button>
           {/* </form> */}
         </CardContent>

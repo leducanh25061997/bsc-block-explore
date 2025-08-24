@@ -53,3 +53,40 @@ export interface IPlatformStatistics {
   _id: string;
   createdAt: string;
 }
+
+export interface IRegister {
+  _id: string;
+  address: string;
+  status: string;
+  amount: number;
+  block: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IRegisterPayload {
+  address: string;
+  amount: number;
+  block: number;
+  r: string;
+  s: string;
+  v: string;
+}
+
+export interface IGetRegisterPayload {
+  address: string;
+}
+
+export interface IGetRegister {
+  address: string;
+}
+
+export interface IBlock {
+  status: string;
+  _id: string;
+  number: string;
+  hash: string;
+  tnx: number;
+  createdAt: string;
+  updatedAt: string;
+}

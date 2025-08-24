@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Clock, Hash, Activity } from 'lucide-react';
+import { IBlock } from '@/types/types';
+import { getBlocks } from '@/services/service';
+import moment from "moment"
 
 interface BlockExplorerProps {
   onSelectBlock: (blockNumber: string, hash: string) => void;
+  blocks: Array<IBlock>
 }
 
-const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
-  const { blocks } = useBlockMint();
+const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock, blocks }) => {
+  // const { blocks } = useBlockMint();
+
 
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp).toLocaleString();
@@ -29,15 +34,15 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
 
       <div className="grid gap-4" data-id="wkq4tnzsv" data-path="src/components/BlockExplorer.tsx">
         {blocks.map((block) =>
-          <Card key={block.number} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500" data-id="775adkeo5" data-path="src/components/BlockExplorer.tsx">
+          <Card key={block.number} className={`hover:shadow-lg transition-shadow border-l-4 ${block.status === "lock" ? "border-l-red-500" : "border-l-blue-500"}`} data-id="775adkeo5" data-path="src/components/BlockExplorer.tsx">
             <CardHeader className="pb-3" data-id="94zr7q8b9" data-path="src/components/BlockExplorer.tsx">
               <div className="flex items-center justify-between" data-id="192drqvlh" data-path="src/components/BlockExplorer.tsx">
                 <CardTitle className="text-lg font-semibold text-gray-800" data-id="9x0nob0e3" data-path="src/components/BlockExplorer.tsx">
                   Block #{block.number}
                 </CardTitle>
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800" data-id="a76cpu3mg" data-path="src/components/BlockExplorer.tsx">
+                <Badge variant="secondary" className={`${block.status === "lock" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`} data-id="a76cpu3mg" data-path="src/components/BlockExplorer.tsx">
                   <Activity className="w-3 h-3 mr-1" data-id="hy0z067hp" data-path="src/components/BlockExplorer.tsx" />
-                  {block.transactions} txns
+                  {block.tnx} txns
                 </Badge>
               </div>
             </CardHeader>
@@ -58,12 +63,13 @@ const BlockExplorer: React.FC<BlockExplorerProps> = ({ onSelectBlock }) => {
                     <span className="font-medium" data-id="yxnwytwmm" data-path="src/components/BlockExplorer.tsx">Timestamp:</span>
                   </div>
                   <div className="text-sm" data-id="xiyw0hg20" data-path="src/components/BlockExplorer.tsx">
-                    {formatTimestamp(block.timestamp)}
+                    {moment(block.createdAt).format("DD/mm/yyyy")}
                   </div>
                 </div>
               </div>
               <div className="pt-2" data-id="zbtpuk163" data-path="src/components/BlockExplorer.tsx">
                 <Button
+                  disabled={block.status === "lock"}
                   onClick={() => onSelectBlock(block.number, block.hash)}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" data-id="qpcirei97" data-path="src/components/BlockExplorer.tsx">
 

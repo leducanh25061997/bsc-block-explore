@@ -21,9 +21,19 @@ import { decimalMultiplication } from '@/utils/common';
 import { CookiesStorage } from '@/lib/cookie-storage';
 import { StorageKeys } from '@/constants/storage-keys';
 import useUserState from '@/stores/user';
+import { IBlock } from '@/types/types';
+import { getBlocks } from '@/services/service';
 
-const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v: string) => void }) => {
-  const [selectedBlock, setSelectedBlock] = useState<string | undefined>();
+interface HomeProps {
+  activeTab: string 
+  setActiveTab: (v: string, type?: "REDIRECT" | "SIDEBAR") => void;
+  selectedBlock: string;
+  setSelectedBlock: (v: string) => void;
+  blocks: Array<IBlock>
+}
+
+const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, setSelectedBlock, blocks }) => {
+  // const [selectedBlock, setSelectedBlock] = useState<string | undefined>();
   const { address, isConnected } = useAppKitAccount();
   const account = address as `0x${string}`;
   const { writeContractAsync, isPending } = useWriteContract();
@@ -33,7 +43,9 @@ const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v
   const decimals = 6;
   const { fetchBalance } = useAppKitBalance();
   const [balance, setBalance] = useState(null);
-  const { setUserInfo } = useUserState(); 
+  const { setUserInfo } = useUserState();
+  // const [blocks, setBlocks] = useState<Array<IBlock>>([]);
+  // console.log("====>")
 
   useEffect(() => {
     if (address) {
@@ -41,10 +53,12 @@ const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v
       setUserInfo(userInfo)
       fetchBalance().then(setBalance);
     }
-}, [address]);
+  }, [address]);
 
   const handleSelectBlock = async (blockNumber: string, hash: string) => {
-    setActiveTab("transaction")
+    setSelectedBlock(blockNumber)
+    setActiveTab("transaction", "REDIRECT")
+    
     // console.log(parseUnits(amount, decimals))
     // if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
     //   // to ast.error('Address không hợp lệ hoặc chưa kết nối');
@@ -84,7 +98,7 @@ const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v
   const renderContent = () => {
     switch (activeTab) {
       case 'blocks':
-        return <BlockExplorer onSelectBlock={handleSelectBlock} data-id="sbmvcyc5y" data-path="src/App.tsx" />;
+        return <BlockExplorer onSelectBlock={handleSelectBlock} blocks={blocks} data-id="sbmvcyc5y" data-path="src/App.tsx" />;
       case 'transaction':
         return <TransactionForm selectedBlock={selectedBlock} data-id="kd9ov61g3" data-path="src/App.tsx" />;
       case 'wallet':
@@ -98,7 +112,7 @@ const Home = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (v
       case 'statistics':
         return <Statistics data-id="8f43xq71s" data-path="src/App.tsx" />;
       default:
-        return <BlockExplorer onSelectBlock={handleSelectBlock} data-id="ivtk0u7l6" data-path="src/App.tsx" />;
+        return <BlockExplorer onSelectBlock={handleSelectBlock} blocks={blocks} data-id="ivtk0u7l6" data-path="src/App.tsx" />;
     }
   };
 
