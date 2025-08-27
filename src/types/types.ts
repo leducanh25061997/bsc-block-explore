@@ -107,3 +107,12 @@ export interface ISwap {
   s: string;
   v: string;
 }
+
+export interface ISendTransaction {
+  address: string;
+  toAddress: string;
+  amount: number;
+  r: string;
+  s: string;
+  v: string;
+}

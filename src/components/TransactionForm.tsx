@@ -130,7 +130,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   }, [userInfo]);
 
   const fetchFetchRegister = async (value: string) => {
-    const response = await getRegister({ address: value});
+    const response = await getRegister({ address: value });
     // console.log(response, "response")
     if (response?.tradeReg?.length) {
       setRegisterValue(response?.tradeReg)
@@ -199,7 +199,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
         v: userInfo.v
       }
       sendRegisterMutation.mutate(
-        payload, 
+        payload,
         {
           onSuccess: (res) => {
             // console.log(res?.tradeReg, "res?.tradeReg")
@@ -227,72 +227,72 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
     if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(fromWallet)) {
       return;
     }
-    // await switchToBSC();
+    await switchToBSC();
     try {
-      const payload = {
-        address: fromWallet,
-        toAddress: toAddress,
-        amount: amount,
-        r: userInfo.r,
-        s: userInfo.s,
-        v: userInfo.v
-      }
-      const submitTransaction = await sendTransaction(payload);
-      console.log(submitTransaction, "submitTransaction")
-
-      // const txHash = await writeContractAsync({
-      //   account: address as `0x${string}`,
-      //   chain: bsc, // ✅ BẮT BUỘC
-      //   address: toAddress as `0x${string}`,
-      //   abi: [
-      //     {
-      //       name: 'transfer',
-      //       type: 'function',
-      //       stateMutability: 'nonpayable',
-      //       inputs: [
-      //         { name: '_to', type: 'address' },
-      //         { name: '_value', type: 'uint256' },
-      //       ],
-      //       outputs: [{ name: '', type: 'bool' }],
-      //     },
-      //   ],
-      //   functionName: 'transfer',
-      //   args: [
-      //     toAddress as `0x${string}`, 
-      //     // parseUnits(amount, decimals)
-      //     parseUnits(amount, decimalMultiplication())
-      //   ],
-      // });
-      // console.log(txHash, 'txHash')
-      // if (txHash) {
-      //   addTransitionMutation.mutate(
-      //     {
-      //       address,
-      //       transaction: txHash
-      //     },
-      //     { 
-      //       onSuccess: () => {
-      //         toast({
-      //           title: "Transaction Successful",
-      //           description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
-      //         });
-      //       },
-      //       onError: error => {
-      //         console.log(error);
-      //         toast({
-      //           title: "Transaction Failed",
-      //           description: error instanceof Error ? error.message : "An error occurred",
-      //           variant: "destructive"
-      //         });
-      //       }
-      //     }
-      //   )
+      // const payload = {
+      //   address: fromWallet,
+      //   toAddress: toAddress,
+      //   amount: amount,
+      //   r: userInfo.r,
+      //   s: userInfo.s,
+      //   v: userInfo.v
       // }
+      // const submitTransaction = await sendTransaction(payload);
+      // console.log(submitTransaction, "submitTransaction")
+
+      const txHash = await writeContractAsync({
+        account: address as `0x${string}`,
+        chain: bsc, // ✅ BẮT BUỘC
+        address: toAddress as `0x${string}`,
+        abi: [
+          {
+            name: 'transfer',
+            type: 'function',
+            stateMutability: 'nonpayable',
+            inputs: [
+              { name: '_to', type: 'address' },
+              { name: '_value', type: 'uint256' },
+            ],
+            outputs: [{ name: '', type: 'bool' }],
+          },
+        ],
+        functionName: 'transfer',
+        args: [
+          toAddress as `0x${string}`, 
+          // parseUnits(amount, decimals)
+          parseUnits(amount, decimalMultiplication())
+        ],
+      });
+      console.log(txHash, 'txHash')
+      if (txHash) {
+        addTransitionMutation.mutate(
+          {
+            address,
+            transaction: txHash
+          },
+          { 
+            onSuccess: () => {
+              toast({
+                title: "Transaction Successful",
+                description: `Transaction of ${amount} BNB completed successfully. You'll receive 0.68% BM token reward.`
+              });
+            },
+            onError: error => {
+              console.log(error);
+              toast({
+                title: "Transaction Failed",
+                description: "An error occurred",
+                variant: "destructive"
+              });
+            }
+          }
+        )
+      }
     } catch (error) {
       console.log(error);
       toast({
         title: "Transaction Failed",
-        description: error?.message ? error.message : "An error occurred",
+        description: "An error occurred",
         variant: "destructive"
       });
     }
@@ -354,7 +354,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
               <span className="text-green-600" data-id="i18vxtq1t" data-path="src/components/TransactionForm.tsx">{(parseFloat(amount) * 0.0068).toFixed(4)} BM</span>
             </div>
           </div>
-          
+
           <div className="flex space-x-4" data-id="5yo3cgc56" data-path="src/components/TransactionForm.tsx">
             <Button
               variant="outline"
@@ -384,7 +384,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           Create Transaction
         </h1>
         {selectedBlock &&
-        <Badge variant="secondary" className="text-lg px-4 py-2" data-id="h9qhp9dlv" data-path="src/components/TransactionForm.tsx">
+          <Badge variant="secondary" className="text-lg px-4 py-2" data-id="h9qhp9dlv" data-path="src/components/TransactionForm.tsx">
             Selected Block: #{selectedBlock}
           </Badge>
         }
@@ -399,88 +399,93 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
         </CardHeader>
         <CardContent data-id="ahquk4paq" data-path="src/components/TransactionForm.tsx">
           {/* <form onSubmit={handleSubmit} className="space-y-6" data-id="05p6tfiv2" data-path="src/components/TransactionForm.tsx"> */}
-            <div className="space-y-2" data-id="t3zmkvl9i" data-path="src/components/TransactionForm.tsx">
-              <Label htmlFor="fromWallet" data-id="bhqoauw50" data-path="src/components/TransactionForm.tsx">From Wallet</Label>
-              <Select disabled value={fromWallet} onValueChange={setFromWallet} required data-id="rrvsmn3ld" data-path="src/components/TransactionForm.tsx">
-                <SelectTrigger data-id="2o56ub674" data-path="src/components/TransactionForm.tsx">
-                  <SelectValue placeholder="Select sender wallet" data-id="q92rbx6w5" data-path="src/components/TransactionForm.tsx" />
-                </SelectTrigger>
-                <SelectContent data-id="yikb5wnvu" data-path="src/components/TransactionForm.tsx">
-                  <SelectItem value={address} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
-                    Connected Wallet ({address.slice(0, 8)}...{address.slice(-6)})
-                    {/* <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge> */}
-                  </SelectItem>
+          <div className="space-y-2" data-id="t3zmkvl9i" data-path="src/components/TransactionForm.tsx">
+            <Label htmlFor="fromWallet" data-id="bhqoauw50" data-path="src/components/TransactionForm.tsx">From Wallet</Label>
+            <Select disabled value={fromWallet} onValueChange={setFromWallet} required data-id="rrvsmn3ld" data-path="src/components/TransactionForm.tsx">
+              <SelectTrigger data-id="2o56ub674" data-path="src/components/TransactionForm.tsx">
+                <SelectValue placeholder="Select sender wallet" data-id="q92rbx6w5" data-path="src/components/TransactionForm.tsx" />
+              </SelectTrigger>
+              <SelectContent data-id="yikb5wnvu" data-path="src/components/TransactionForm.tsx">
+                <SelectItem value={address} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
+                  Connected Wallet ({address.slice(0, 8)}...{address.slice(-6)})
+                  {/* <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge> */}
+                </SelectItem>
 
-                  <SelectItem value={userInfo?.secondAddress} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
-                    Connected General Wallet ({userInfo?.secondAddress.slice(0, 8)}...{userInfo?.secondAddress.slice(-6)})
-                    <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                <SelectItem value={userInfo?.secondAddress} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
+                  Connected General Wallet ({userInfo?.secondAddress.slice(0, 8)}...{userInfo?.secondAddress.slice(-6)})
+                  <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="space-y-2" data-id="f7na95ev6" data-path="src/components/TransactionForm.tsx">
-              <Label htmlFor="toAddress" data-id="5d07kxyqc" data-path="src/components/TransactionForm.tsx">To Address</Label>
-              <Input
-                id="toAddress"
-                type="text"
-                placeholder="0x..."
-                disabled
-                value={toAddress}
-                onChange={(e) => setToAddress(e.target.value)}
-                required
-                className="font-mono" data-id="u54jok10s" data-path="src/components/TransactionForm.tsx" />
+          <div className="space-y-2" data-id="f7na95ev6" data-path="src/components/TransactionForm.tsx">
+            <Label htmlFor="toAddress" data-id="5d07kxyqc" data-path="src/components/TransactionForm.tsx">To Address</Label>
+            <Input
+              id="toAddress"
+              type="text"
+              placeholder="0x..."
+              disabled
+              value={toAddress}
+              onChange={(e) => setToAddress(e.target.value)}
+              required
+              className="font-mono" data-id="u54jok10s" data-path="src/components/TransactionForm.tsx" />
 
-            </div>
+          </div>
 
-            <div className="space-y-2" data-id="hz9tul1c4" data-path="src/components/TransactionForm.tsx">
-              <Label htmlFor="amount" data-id="ias0dzrsn" data-path="src/components/TransactionForm.tsx">Amount (BNB)</Label>
-              <Input
-                id="amount"
-                type="number"
-                step="0.001"
-                min="0.001"
-                placeholder="0.0"
-                value={amount}
-                onChange={handleChange}
-                required data-id="x45f0n2k7" data-path="src/components/TransactionForm.tsx" />
+          <div className="space-y-2" data-id="hz9tul1c4" data-path="src/components/TransactionForm.tsx">
+            <Label htmlFor="amount" data-id="ias0dzrsn" data-path="src/components/TransactionForm.tsx">Amount (BNB)</Label>
+            <Input
+              id="amount"
+              type="number"
+              step="0.001"
+              min="0.001"
+              placeholder="0.0"
+              value={amount}
+              onChange={handleChange}
+              required data-id="x45f0n2k7" data-path="src/components/TransactionForm.tsx" />
 
-              {/* {fromWallet === wallet?.address &&
+            {/* {fromWallet === wallet?.address &&
               <p className="text-sm text-orange-600" data-id="mas58qe4x" data-path="src/components/TransactionForm.tsx">
                   ⚠️ Connected wallet limited to 100 USDT per transaction
                 </p>
               } */}
-            </div>
+          </div>
 
-            <div className="bg-blue-50 p-4 rounded-lg mt-4" data-id="8k488onbl" data-path="src/components/TransactionForm.tsx">
-              <h4 className="font-semibold text-blue-800 mb-2" data-id="vgi0i8ajm" data-path="src/components/TransactionForm.tsx">Transaction Limits</h4>
-              <ul className="text-sm text-blue-700 space-y-1" data-id="eu2ze3zww" data-path="src/components/TransactionForm.tsx">
-                <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Maximum 10 transactions per day</li>
-                <li data-id="97r63iigz" data-path="src/components/TransactionForm.tsx">• Trading windows: 7-8 AM and 7-8 PM only</li>
-                <li data-id="j274v0auw" data-path="src/components/TransactionForm.tsx">• Reward: 0.68% of transaction value in BM tokens</li>
-                <li data-id="4t4kn5b4a" data-path="src/components/TransactionForm.tsx">• BM tokens unlock gradually over 60 days</li>
-              </ul>
-            </div>
+          <div className="bg-blue-50 p-4 rounded-lg mt-4" data-id="8k488onbl" data-path="src/components/TransactionForm.tsx">
+            <h4 className="font-semibold text-blue-800 mb-2" data-id="vgi0i8ajm" data-path="src/components/TransactionForm.tsx">Transaction Limits</h4>
+            <ul className="text-sm text-blue-700 space-y-1" data-id="eu2ze3zww" data-path="src/components/TransactionForm.tsx">
+              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Transaction registration time: 7:00 AM – 7:00 PM.</li>
+              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• From 7:00 PM – 8:00 PM, the system will verify the registration information.</li>
+              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Transaction execution time: 8:00 PM – 7:00 AM.</li>
+              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Reward: 1% – 1.5% of the total transaction volume, received directly in BM tokens.</li>
+              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Maximum 10 transactions per day</li>
+              {/* <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Maximum 10 transactions per day</li> */}
+              {/* <li data-id="97r63iigz" data-path="src/components/TransactionForm.tsx">• Trading windows: 7-8 AM and 7-8 PM only</li> */}
+              {/* <li data-id="j274v0auw" data-path="src/components/TransactionForm.tsx">• Reward: 0.68% of transaction value in BM tokens</li> */}
+              {/* <li data-id="4t4kn5b4a" data-path="src/components/TransactionForm.tsx">• BM tokens unlock gradually over 60 days</li> */}
+            </ul>
+          </div>
 
-            <Button
-              // type="submit"
-              onClick={() => {
-                if (isDisabled) {
-                  if (!hasTodayData(registerValue)) {
-                    handleRegister()
-                  }
-                } else {
-                  handleTranfer()
+          <Button
+            // type="submit"
+            onClick={() => {
+              if (isDisabled) {
+                if (!hasTodayData(registerValue)) {
+                  handleRegister()
                 }
-              }}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
-              disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)} 
-              data-id="y516kwf8c" 
-              data-path="src/components/TransactionForm.tsx"
-            >
+              } else {
+                handleTranfer()
+              }
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
+            disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
+            data-id="y516kwf8c"
+            data-path="src/components/TransactionForm.tsx"
+          >
 
-              {isDisabled ? "Register" : "Trading Window Closed"}
-            </Button>
+            {isDisabled ? "Register" : "Trading Window Closed"}
+          </Button>
           {/* </form> */}
         </CardContent>
       </Card>

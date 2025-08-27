@@ -252,20 +252,23 @@ const Mining: React.FC = () => {
               <ul className="space-y-2 text-sm text-gray-600" data-id="40jypc8jc" data-path="src/components/Mining.tsx">
                 <li className="flex items-start" data-id="31dp5q5cy" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="8b9ohlo0e" data-path="src/components/Mining.tsx"></span>
-                  Mine 0.006 BM tokens per session
+                  {/* Mine 0.006 BM tokens per session */}
+                  Holding BM tokens earns a mining reward of 2% per day.
                 </li>
                 <li className="flex items-start" data-id="mbcz8ddpq" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="ovstfm357" data-path="src/components/Mining.tsx"></span>
-                  Available during trading windows (7-8 AM & 7-8 PM)
+                  {/* Available during trading windows (7-8 AM & 7-8 PM) */}
+                  Reward distribution time: 7:00 AM – 8:00 AM.
                 </li>
                 <li className="flex items-start" data-id="fpwb1f7il" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="t4ozbgh11" data-path="src/components/Mining.tsx"></span>
-                  Maximum 2 mining sessions per day
+                  {/* Maximum 2 mining sessions per day */}
+                  When mining is stopped, BM tokens will be returned between 7:00 AM – 8:00 AM the following day.
                 </li>
-                <li className="flex items-start" data-id="shoryl6vx" data-path="src/components/Mining.tsx">
+                {/* <li className="flex items-start" data-id="shoryl6vx" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="zryw9ahlv" data-path="src/components/Mining.tsx"></span>
                   Mined tokens are added to locked balance
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -274,19 +277,23 @@ const Mining: React.FC = () => {
               <ul className="space-y-2 text-sm text-gray-600" data-id="7m4ycztok" data-path="src/components/Mining.tsx">
                 <li className="flex items-start" data-id="ngvk7e95c" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="0awg8zl0a" data-path="src/components/Mining.tsx"></span>
-                  Continuous mining at 0.1% of total BM per hour
+                  {/* Continuous mining at 0.1% of total BM per hour */}
+                  Holding BM tokens earns a mining reward of 2% per day.
                 </li>
                 <li className="flex items-start" data-id="1ybtqeckf" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="7yzdxn37w" data-path="src/components/Mining.tsx"></span>
-                  Activated when you have BM tokens
+                  {/* Activated when you have BM tokens */}
+                  Reward distribution time: 7:00 AM – 8:00 AM.
                 </li>
                 <li className="flex items-start" data-id="8yfgigi19" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="2vcvan9pq" data-path="src/components/Mining.tsx"></span>
-                  No time restrictions
+                  {/* No time restrictions */}
+                  When mining is stopped, BM tokens will be returned between 7:00 AM – 8:00 AM the following day.
                 </li>
                 <li className="flex items-start" data-id="nyvxeo77p" data-path="src/components/Mining.tsx">
                   <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="9gk7em7c2" data-path="src/components/Mining.tsx"></span>
-                  Higher total BM = faster auto mining
+                  {/* Higher total BM = faster auto mining */}
+                  BM token rewards will be automatically compounded into the total mined BM tokens.
                 </li>
               </ul>
             </div>

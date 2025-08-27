@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants/common';
-import { AddRefPayload, AddTransitionPayload, AuthParams, IBlock, IGetRegister, IGetRegisterPayload, IMinningPayload, IPlatformStatistics, IRegister, IRegisterPayload, ISwap, IUser } from '@/types/types';
+import { AddRefPayload, AddTransitionPayload, AuthParams, IBlock, IGetRegister, IGetRegisterPayload, IMinningPayload, IPlatformStatistics, IRegister, IRegisterPayload, ISendTransaction, ISwap, IUser } from '@/types/types';
 import { request } from '@/utils/request';
 import { useQuery, useMutation } from '@tanstack/react-query';
 
@@ -8,7 +8,7 @@ export const addRef = (data: AddRefPayload) => request.post(API_URL + '/addRef',
 export const addTransition = (data: AddTransitionPayload) => request.post(API_URL + '/addtransition', data);
 export const getMainConfig = (): Promise<{ configdata: IPlatformStatistics }> => request.post(API_URL + '/getMainConfig');
 export const getHistory = () => request.post(API_URL + '/history');
-export const sendTransaction = (data: any) => request.post(API_URL + '/sendTransaction', data);
+export const sendTransaction = (data: ISendTransaction) => request.post(API_URL + '/sendTransaction', data);
 export const register = (data: IRegisterPayload): Promise<{ tradeReg: Array<IRegister> }> => request.post(API_URL + '/register', data);
 export const getRegister = (data: IGetRegisterPayload): Promise<{ tradeReg: Array<IRegister> }> => request.post(API_URL + '/getRegister', data);
 export const getBlocks = (): Promise<{blocks: Array<IBlock> }> => request.post(API_URL + '/getBlocks');

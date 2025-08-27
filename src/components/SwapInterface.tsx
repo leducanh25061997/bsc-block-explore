@@ -123,12 +123,12 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
     //       }
     //     }
     //   )
-      // await swapBMToBNB(parseFloat(bmAmount));
-      // toast({
-      //   title: "Swap Successful",
-      //   description: `Swapped ${bmAmount} BM for ${(parseFloat(bmAmount) * BM_PRICE).toFixed(4)} BNB.`
-      // });
-      // setBmAmount('');
+    // await swapBMToBNB(parseFloat(bmAmount));
+    // toast({
+    //   title: "Swap Successful",
+    //   description: `Swapped ${bmAmount} BM for ${(parseFloat(bmAmount) * BM_PRICE).toFixed(4)} BNB.`
+    // });
+    // setBmAmount('');
     // } catch (error) {
     //   toast({
     //     title: "Swap Failed",
@@ -229,7 +229,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
               <TabsTrigger value="bnb-to-bm" data-id="ze4bmh2jz" data-path="src/components/SwapInterface.tsx">BNB → BM</TabsTrigger>
               <TabsTrigger value="bm-to-bnb" data-id="vvomt76d7" data-path="src/components/SwapInterface.tsx">BM → BNB</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="bnb-to-bm" className="space-y-4" data-id="4rh0hnyk4" data-path="src/components/SwapInterface.tsx">
               <div className="space-y-4" data-id="9viz6s1i5" data-path="src/components/SwapInterface.tsx">
                 <div className="space-y-2" data-id="2gjvqcomt" data-path="src/components/SwapInterface.tsx">
@@ -249,7 +249,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                 </div>
 
                 {bnbAmount &&
-                <div className="bg-blue-50 p-4 rounded-lg" data-id="8burupd6q" data-path="src/components/SwapInterface.tsx">
+                  <div className="bg-blue-50 p-4 rounded-lg" data-id="8burupd6q" data-path="src/components/SwapInterface.tsx">
                     <div className="flex items-center justify-between" data-id="fwnj80iv5" data-path="src/components/SwapInterface.tsx">
                       <span data-id="27y040wzs" data-path="src/components/SwapInterface.tsx">You will receive:</span>
                       <span className="font-bold text-blue-600" data-id="gokgoa6nl" data-path="src/components/SwapInterface.tsx">
@@ -270,7 +270,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                 </Button>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="bm-to-bnb" className="space-y-4" data-id="ze96advdb" data-path="src/components/SwapInterface.tsx">
               <div className="space-y-4" data-id="7m0xs3cm9" data-path="src/components/SwapInterface.tsx">
                 <div className="space-y-2" data-id="lli35v9vs" data-path="src/components/SwapInterface.tsx">
@@ -290,7 +290,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                 </div>
 
                 {bmAmount &&
-                <div className="bg-green-50 p-4 rounded-lg" data-id="u3uq7xuv6" data-path="src/components/SwapInterface.tsx">
+                  <div className="bg-green-50 p-4 rounded-lg" data-id="u3uq7xuv6" data-path="src/components/SwapInterface.tsx">
                     <div className="flex items-center justify-between" data-id="r5a7tbe4o" data-path="src/components/SwapInterface.tsx">
                       <span data-id="glz0js1n0" data-path="src/components/SwapInterface.tsx">You will receive:</span>
                       <span className="font-bold text-green-600" data-id="mf7td3dpw" data-path="src/components/SwapInterface.tsx">
@@ -317,13 +317,29 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
       </Card>
 
       {/* Information Card */}
-      <Card className="max-w-4xl mx-auto" data-id="4kuij57o5" data-path="src/components/SwapInterface.tsx">
+      <Card className="max-w-xl mx-auto" data-id="4kuij57o5" data-path="src/components/SwapInterface.tsx">
         <CardHeader data-id="gtmcn95y8" data-path="src/components/SwapInterface.tsx">
           <CardTitle data-id="xtoh8xweu" data-path="src/components/SwapInterface.tsx">Swap Information</CardTitle>
         </CardHeader>
         <CardContent data-id="mnbielzo5" data-path="src/components/SwapInterface.tsx">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6" data-id="o6rzfrps9" data-path="src/components/SwapInterface.tsx">
+          <div className="grid grid-cols-1 gap-6" data-id="o6rzfrps9" data-path="src/components/SwapInterface.tsx">
             <div className="space-y-4" data-id="henhadfk8" data-path="src/components/SwapInterface.tsx">
+              <ul className="space-y-2 text-sm text-gray-600" data-id="2bcnbnxvc" data-path="src/components/SwapInterface.tsx">
+                <li className="flex items-start" data-id="ex0dgn6jz" data-path="src/components/SwapInterface.tsx">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="nsc0hq38x" data-path="src/components/SwapInterface.tsx"></span>
+                  1 BNB = 100 BM tokens.
+                </li>
+                <li className="flex items-start" data-id="ex0dgn6jz" data-path="src/components/SwapInterface.tsx">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="nsc0hq38x" data-path="src/components/SwapInterface.tsx"></span>
+                  BM tokens can participate in mining.
+                </li>
+                <li className="flex items-start" data-id="ex0dgn6jz" data-path="src/components/SwapInterface.tsx">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" data-id="nsc0hq38x" data-path="src/components/SwapInterface.tsx"></span>
+                  Locked BM tokens cannot be swapped.
+                </li>
+              </ul>
+            </div>
+            {/* <div className="space-y-4" data-id="henhadfk8" data-path="src/components/SwapInterface.tsx">
               <h4 className="font-semibold text-gray-800" data-id="0omxdkzvk" data-path="src/components/SwapInterface.tsx">BNB to BM Swap</h4>
               <ul className="space-y-2 text-sm text-gray-600" data-id="2bcnbnxvc" data-path="src/components/SwapInterface.tsx">
                 <li className="flex items-start" data-id="ex0dgn6jz" data-path="src/components/SwapInterface.tsx">
@@ -343,9 +359,9 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                   Instant transaction processing
                 </li>
               </ul>
-            </div>
+            </div> */}
 
-            <div className="space-y-4" data-id="y0rt02iie" data-path="src/components/SwapInterface.tsx">
+            {/* <div className="space-y-4" data-id="y0rt02iie" data-path="src/components/SwapInterface.tsx">
               <h4 className="font-semibold text-gray-800" data-id="dlo9dsy15" data-path="src/components/SwapInterface.tsx">BM to BNB Swap</h4>
               <ul className="space-y-2 text-sm text-gray-600" data-id="t9tp999vz" data-path="src/components/SwapInterface.tsx">
                 <li className="flex items-start" data-id="wrvgbp3fa" data-path="src/components/SwapInterface.tsx">
@@ -365,7 +381,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                   Direct transfer to your connected wallet
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </CardContent>
       </Card>

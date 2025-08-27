@@ -9,6 +9,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount, useAppKitBalance } from '@reown/appkit/react';
 import useUserState from '@/stores/user';
 import { ethers } from "ethers";
+import { useSendTransactionMutation } from '@/services/service';
+import { ISendTransaction } from '@/types/types';
+import { toast as ToastCus } from 'react-toastify';
 interface WalletDashboardProps {
   balance?: any;
 }
@@ -24,7 +27,8 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const { userInfo } = useUserState();
-  const [gereralBalance, setGereralBalance] = useState<any>(0);
+  const [gereralBalance, setGereralBalance] = useState<any>(0)
+  const sendTransactionMutation = useSendTransactionMutation();
   // console.log(userInfo, "userInfo")
 
   // Sử dụng URL của một node BSC công khai
@@ -93,6 +97,35 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
     }
   };
 
+  const handleWithdrawMoney = () => {
+    if (userInfo) {
+      const payload: ISendTransaction = {
+        address: userInfo.secondAddress,
+        // amount: Number(gereralBalance),
+        amount: 0.00001,
+        r: userInfo.r,
+        s: userInfo.s,
+        v: userInfo.v,
+        toAddress: userInfo.address
+      }
+      sendTransactionMutation.mutate(
+        payload,
+        {
+          onSuccess: (res) => {
+            console.log(res, "res?.tradeReg")
+            ToastCus.success('Withdraw success.', {
+              position: 'top-right',
+            });
+            // if (res?.tradeReg?.length) {
+            //   setTradeReg(res.tradeReg[0]);
+            //   CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(res.tradeReg[0]));
+            //   setActiveTab("blocks")
+            // }
+          }
+        }
+      )
+    }
+  }
 
   if (!address && !isConnected) {
     return (
@@ -145,18 +178,27 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
               <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{balance?.data?.balance ? Number(balance?.data?.balance).toFixed(4) : 0} BNB</span>
             </div>
-            <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
+            {/* <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
               Transaction Limit: 100 USDT
-            </Badge>
+            </Badge> */}
           </CardContent>
         </Card>
 
         <Card data-id="9lmk7rqc1" data-path="src/components/WalletDashboard.tsx">
           <CardHeader data-id="3wo90qygm" data-path="src/components/WalletDashboard.tsx">
-            <CardTitle className="flex items-center" data-id="smn68iz7i" data-path="src/components/WalletDashboard.tsx">
-              <Wallet className="w-5 h-5 mr-2" data-id="qkbgk959f" data-path="src/components/WalletDashboard.tsx" />
-              General Wallet
-            </CardTitle>
+            <div className='flex justify-between'>
+              <CardTitle className="flex items-center" data-id="smn68iz7i" data-path="src/components/WalletDashboard.tsx">
+                <Wallet className="w-5 h-5 mr-2" data-id="qkbgk959f" data-path="src/components/WalletDashboard.tsx" />
+                General Wallet
+              </CardTitle>
+              <Button
+                onClick={handleWithdrawMoney}
+                // disabled={!isTransactionTime || mining.dailyMiningCount >= 2}
+                className="px-8 bg-gradient-to-r from-blue-600 to-purple-600" data-id="z8q547rev" data-path="src/components/Mining.tsx">
+                {"Withdraw"}
+              </Button>
+            </div>
+
           </CardHeader>
           <CardContent className="space-y-3" data-id="0mjv95ywr" data-path="src/components/WalletDashboard.tsx">
             <div className="hidden md:flex justify-between items-center font-mono text-sm bg-gray-100 p-2 rounded" data-id="d0o81tjz5" data-path="src/components/WalletDashboard.tsx">
@@ -182,10 +224,10 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
               <span data-id="59rewfglk" data-path="src/components/WalletDashboard.tsx">BNB Balance:</span>
               <span className="font-semibold" data-id="ff7mwiyuy" data-path="src/components/WalletDashboard.tsx">{gereralBalance} BNB</span>
             </div>
-            <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
-              {/* Transaction Limit: 100 USDT */}
+            {/* <Badge variant="outline" className="w-full justify-center" data-id="urvjq7z8a" data-path="src/components/WalletDashboard.tsx">
+              Transaction Limit: 100 USDT
               Unlimitted
-            </Badge>
+            </Badge> */}
           </CardContent>
         </Card>
 
