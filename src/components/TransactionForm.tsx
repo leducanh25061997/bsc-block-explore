@@ -189,6 +189,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   };
 
   const handleRegister = () => {
+    if (Number(amount) < 0.01) {
+      toast({
+        title: "Register Failed",
+        description: "Value must be greater than 0.01",
+        variant: "destructive"
+      });
+      return;
+    }
     if (userInfo && selectedBlock) {
       const payload: IRegisterPayload = {
         address: userInfo.address,
@@ -219,11 +227,22 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const onlyNumbers = e.target.value.replace(/\D/g, "");
-    setAmount(onlyNumbers);
+    // const onlyNumbers = e.target.value.replace(/\D/g, "");
+    const raw = e.target.value;
+    const onlyNumsAndDot = raw.replace(/[^0-9.]/g, "");
+    const finalValue = onlyNumsAndDot.replace(/(\..*)\./g, "$1");
+    setAmount(finalValue);
   };
 
   const handleTranfer = async () => {
+    if (Number(amount) < 0.01) {
+      toast({
+        title: "Tranfer Failed",
+        description: "Value must be greater than 0.01",
+        variant: "destructive"
+      });
+      return;
+    }
     if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(fromWallet)) {
       return;
     }
