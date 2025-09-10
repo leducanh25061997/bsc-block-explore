@@ -13,7 +13,7 @@ import { parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
-import { getRegister, sendTransaction, useAddTransitionMutation, useSendRegisterMutation, useSendTransactionMutation } from '@/services/service';
+import { getRegister, useAddTransitionMutation, useSendRegisterMutation, useSendTransactionMutation } from '@/services/service';
 // import { toast } from 'react-toastify';
 import useUserState from '@/stores/user';
 import { useDisableButtonByTime } from '@/hooks/useDisableButtonByTime';
@@ -21,6 +21,11 @@ import { IRegister, IRegisterPayload } from '@/types/types';
 import { toast as ToastCus } from 'react-toastify';
 import { StorageKeys } from '@/constants/storage-keys';
 import { CookiesStorage } from '@/lib/cookie-storage';
+
+import { parseEther } from "viem";
+import { sendTransaction } from "wagmi/actions";
+import { config } from '@/config';
+
 interface TransactionFormProps {
   selectedBlock?: string;
   setActiveTab: (v: string) => void;
@@ -125,6 +130,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
 
   useEffect(() => {
     if (userInfo) {
+      // console.log(userInfo, 'userInfo')
       setToAddress(userInfo.secondAddress)
     }
   }, [userInfo]);
@@ -235,54 +241,48 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   };
 
   const handleTranfer = async () => {
-    if (Number(amount) < 0.01) {
-      toast({
-        title: "Tranfer Failed",
-        description: "Value must be greater than 0.01",
-        variant: "destructive"
-      });
-      return;
-    }
+    // if (Number(amount) < 0.01) {
+    //   toast({
+    //     title: "Tranfer Failed",
+    //     description: "Value must be greater than 0.01",
+    //     variant: "destructive"
+    //   });
+    //   return;
+    // }
     if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(fromWallet)) {
       return;
     }
     await switchToBSC();
+    // console.log(String(amount), "String(amount)")
     try {
-      // const payload = {
-      //   address: fromWallet,
-      //   toAddress: toAddress,
-      //   amount: amount,
-      //   r: userInfo.r,
-      //   s: userInfo.s,
-      //   v: userInfo.v
-      // }
-      // const submitTransaction = await sendTransaction(payload);
-      // console.log(submitTransaction, "submitTransaction")
-
-      const txHash = await writeContractAsync({
+      // const txHash = await writeContractAsync({
+      //   account: address as `0x${string}`,
+      //   chain: bsc, // ✅ BẮT BUỘC
+      //   address: '0x55d398326f99059fF775485246999027B3197955' as `0x${string}`,
+      //   abi: [
+      //     {
+      //       name: 'transfer',
+      //       type: 'function',
+      //       stateMutability: 'nonpayable',
+      //       inputs: [
+      //         { name: '_to', type: 'address' },
+      //         { name: '_value', type: 'uint256' },
+      //       ],
+      //       outputs: [{ name: '', type: 'bool' }],
+      //     },
+      //   ],
+      //   functionName: 'transfer',
+      //   args: [
+      //     toAddress as `0x${string}`,
+      //     parseUnits(String(amount), decimalMultiplication()), 
+      //   ],
+      // });
+      const txHash = await sendTransaction(config, {
         account: address as `0x${string}`,
-        chain: bsc, // ✅ BẮT BUỘC
-        address: toAddress as `0x${string}`,
-        abi: [
-          {
-            name: 'transfer',
-            type: 'function',
-            stateMutability: 'nonpayable',
-            inputs: [
-              { name: '_to', type: 'address' },
-              { name: '_value', type: 'uint256' },
-            ],
-            outputs: [{ name: '', type: 'bool' }],
-          },
-        ],
-        functionName: 'transfer',
-        args: [
-          toAddress as `0x${string}`, 
-          // parseUnits(amount, decimals)
-          parseUnits(amount, decimalMultiplication())
-        ],
+        to: toAddress as `0x${string}`,
+        value: parseEther(String(amount)), // số BNB gửi
+        chainId: bsc.id,                   // BSC mainnet id = 56
       });
-      console.log(txHash, 'txHash')
       if (txHash) {
         addTransitionMutation.mutate(
           {
@@ -297,7 +297,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
               });
             },
             onError: error => {
-              console.log(error);
+              // console.log(error);
               toast({
                 title: "Transaction Failed",
                 description: "An error occurred",
@@ -308,7 +308,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
         )
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast({
         title: "Transaction Failed",
         description: "An error occurred",

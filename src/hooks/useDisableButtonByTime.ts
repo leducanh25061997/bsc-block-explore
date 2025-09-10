@@ -1,8 +1,12 @@
+import { StorageKeys } from "@/constants/storage-keys";
+import { CookiesStorage } from "@/lib/cookie-storage";
+import useUserState from "@/stores/user";
 import { useEffect, useState } from "react";
 
 export function useDisableButtonByTime(startHour: number, endHour: number) {
   const [isDisabled, setIsDisabled] = useState(false);
   const [nextCheck, setNextCheck] = useState<Date | null>(null);
+  const { setUserInfo, setTradeReg } = useUserState();
 
   const checkTime = () => {
     const now = new Date();
@@ -12,6 +16,12 @@ export function useDisableButtonByTime(startHour: number, endHour: number) {
       setIsDisabled(true);
     } else {
       setIsDisabled(false);
+    }
+
+    if (hours >= 7) {
+      setTradeReg(null);
+      CookiesStorage.clearCookieData(StorageKeys.TradeReq);
+      console.log("Cookie setTradeReg removed at", now.toLocaleTimeString());
     }
 
     const next = new Date(now.getTime() + 60 * 60 * 1000);

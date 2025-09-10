@@ -12,6 +12,8 @@ import { ethers } from "ethers";
 import { useSendTransactionMutation } from '@/services/service';
 import { ISendTransaction } from '@/types/types';
 import { toast as ToastCus } from 'react-toastify';
+import { Modal } from './ui/modal';
+import { ModalWidthDraw } from './ModalWidthDraw';
 interface WalletDashboardProps {
   balance?: any;
 }
@@ -28,7 +30,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const { address, isConnected } = useAppKitAccount();
   const { userInfo } = useUserState();
   const [gereralBalance, setGereralBalance] = useState<any>(0)
-  const sendTransactionMutation = useSendTransactionMutation();
+  const [isModal, setIsModal] = useState<boolean>(false);
   // console.log(userInfo, "userInfo")
 
   // Sử dụng URL của một node BSC công khai
@@ -97,36 +99,6 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
     }
   };
 
-  const handleWithdrawMoney = () => {
-    if (userInfo) {
-      const payload: ISendTransaction = {
-        address: userInfo.secondAddress,
-        // amount: Number(gereralBalance),
-        amount: 0.00001,
-        r: userInfo.r,
-        s: userInfo.s,
-        v: userInfo.v,
-        toAddress: userInfo.address
-      }
-      sendTransactionMutation.mutate(
-        payload,
-        {
-          onSuccess: (res) => {
-            console.log(res, "res?.tradeReg")
-            ToastCus.success('Withdraw success.', {
-              position: 'top-right',
-            });
-            // if (res?.tradeReg?.length) {
-            //   setTradeReg(res.tradeReg[0]);
-            //   CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(res.tradeReg[0]));
-            //   setActiveTab("blocks")
-            // }
-          }
-        }
-      )
-    }
-  }
-
   if (!address && !isConnected) {
     return (
       <Card className="max-w-4xl mx-auto" data-id="uhlu7j5dw" data-path="src/components/WalletDashboard.tsx">
@@ -192,7 +164,8 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
                 General Wallet
               </CardTitle>
               <Button
-                onClick={handleWithdrawMoney}
+                // onClick={handleWithdrawMoney}
+                onClick={() => setIsModal(true)}
                 // disabled={!isTransactionTime || mining.dailyMiningCount >= 2}
                 className="px-8 bg-gradient-to-r from-blue-600 to-purple-600" data-id="z8q547rev" data-path="src/components/Mining.tsx">
                 {"Withdraw"}
@@ -438,7 +411,13 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </Tabs>
         </CardContent>
       </Card>
-    </div>);
+      <Modal
+        isOpen={isModal}
+        onClose={() => setIsModal(false)}
+        children={<ModalWidthDraw setIsModal={setIsModal} />}
+      />
+    </div>
+  );
 
 };
 
