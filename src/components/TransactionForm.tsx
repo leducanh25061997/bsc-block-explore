@@ -9,7 +9,7 @@ import { useBlockMint } from '@/contexts/BlockMintContext';
 import { AlertCircle, Send, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount } from '@reown/appkit/react';
-import { parseUnits } from 'viem';
+import { formatUnits, parseUnits } from 'viem';
 import { useWriteContract } from 'wagmi';
 import { decimalMultiplication } from '@/utils/common';
 import { defineChain } from 'viem';
@@ -23,13 +23,17 @@ import { StorageKeys } from '@/constants/storage-keys';
 import { CookiesStorage } from '@/lib/cookie-storage';
 
 import { parseEther } from "viem";
-import { sendTransaction } from "wagmi/actions";
+import { getPublicClient, getWalletClient, sendTransaction } from "wagmi/actions";
 import { config } from '@/config';
+import { ethers } from 'ethers';
+import { estimateFeesPerGas, estimateGas } from 'viem/actions';
 
 interface TransactionFormProps {
   selectedBlock?: string;
   setActiveTab: (v: string) => void;
 }
+
+const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 
 const bsc = defineChain({
   id: 56,
@@ -240,6 +244,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
     setAmount(finalValue);
   };
 
+  function calcFeeBNB(gasPriceWei, estimatedGas) {
+    const feeWei = BigInt(gasPriceWei) * BigInt(estimatedGas);
+    const feeBNB = Number(feeWei) / 1e18;
+    return feeBNB;
+  }
+
   const handleTranfer = async () => {
     // if (Number(amount) < 0.01) {
     //   toast({
@@ -277,11 +287,34 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
       //     parseUnits(String(amount), decimalMultiplication()), 
       //   ],
       // });
+
+
+      const publicClient = getPublicClient(config, { chainId: bsc.id });
+      const walletClient = await getWalletClient(config, { chainId: bsc.id });
+    
+      const estimatedGas = await publicClient.estimateGas({
+        account: address as `0x${string}`,
+        to: toAddress as `0x${string}`,
+        value: parseEther(String(amount)),
+      });
+    
+      const gasPrice = await publicClient.getGasPrice();
+    
+      const feeWei = gasPrice * estimatedGas;
+      const feeBNB = Number(formatUnits(feeWei, 18));
+
+      console.log("Gas Estimate:", estimatedGas.toString());
+      console.log("Gas Price:", formatUnits(gasPrice, 9), "gwei"); 
+      console.log("Fee (BNB):", feeBNB);
+
+
       const txHash = await sendTransaction(config, {
         account: address as `0x${string}`,
         to: toAddress as `0x${string}`,
         value: parseEther(String(amount)), // số BNB gửi
         chainId: bsc.id,                   // BSC mainnet id = 56
+        gas: estimatedGas,
+        gasPrice: gasPrice,
       });
       if (txHash) {
         addTransitionMutation.mutate(
@@ -489,13 +522,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              if (isDisabled) {
-                if (!hasTodayData(registerValue)) {
-                  handleRegister()
-                }
-              } else {
-                handleTranfer()
-              }
+              // if (isDisabled) {
+              //   if (!hasTodayData(registerValue)) {
+              //     handleRegister()
+              //   }
+              // } else {
+              //   handleTranfer()
+              // }
+              handleTranfer()
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
             disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
