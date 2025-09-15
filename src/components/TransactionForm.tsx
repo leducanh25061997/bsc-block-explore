@@ -522,14 +522,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              // if (isDisabled) {
-              //   if (!hasTodayData(registerValue)) {
-              //     handleRegister()
-              //   }
-              // } else {
-              //   handleTranfer()
-              // }
-              handleTranfer()
+              if (isDisabled) {
+                if (!hasTodayData(registerValue)) {
+                  handleRegister()
+                }
+              } else {
+                handleTranfer()
+              }
+              // handleTranfer()
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
             disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
