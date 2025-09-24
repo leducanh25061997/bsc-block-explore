@@ -202,7 +202,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
     if (Number(amount) < 0.001) {
       toast({
         title: "Register Failed",
-        description: "Value must be greater than 0.01",
+        description: "Value must be greater than 0.001",
         variant: "destructive"
       });
       return;
