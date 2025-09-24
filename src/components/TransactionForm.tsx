@@ -95,7 +95,7 @@ const switchToBSC = async () => {
 
 function hasTodayData(arr?: Array<IRegister>): boolean {
   const today = new Date();
-  const todayStr = today.toISOString().split("T")[0]; // "2025-08-24"
+  const todayStr = today.toISOString().split("T")[0];
 
   return arr.some(item => {
     const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
@@ -199,7 +199,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   };
 
   const handleRegister = () => {
-    if (Number(amount) < 0.01) {
+    if (Number(amount) < 0.001) {
       toast({
         title: "Register Failed",
         description: "Value must be greater than 0.01",
