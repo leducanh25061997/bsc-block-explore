@@ -67,7 +67,6 @@ const App = () => {
 
     if (type === "SIDEBAR" && v === 'transaction') {
       const randomIndex = Math.floor(Math.random() * blocks.length);
-      console.log(blocks[randomIndex].hash, "blocks[randomIndex].hash")
       setSelectedBlock(blocks[randomIndex].number)
     }
   }
