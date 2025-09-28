@@ -67,7 +67,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
   //   }
   // };
 
-  const handleBMToBNB = async () => {
+  const handleBMToBNB = async (type: 'bnb-to-bm' | 'bm-to-bnb') => {
     // if (!bmAmount || parseFloat(bmAmount) <= 0) {
     //   toast({
     //     title: "Invalid Amount",
@@ -77,12 +77,13 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
     //   return;
     // }
 
+    
     if (!userInfo) return;
 
     setIsLoading(true);
 
     const payload: ISwap = {
-      address: userInfo.address,
+      address: type === 'bm-to-bnb' ? userInfo.address : '0x30a8f76AaC428835c6632886A25c66Fa8216e7ae',
       amount: Number(bnbAmount),
       r: userInfo.r,
       s: userInfo.s,
@@ -261,7 +262,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                 }
 
                 <Button
-                  onClick={handleBMToBNB}
+                  onClick={() => handleBMToBNB('bnb-to-bm')}
                   disabled={isLoading || !bnbAmount || parseFloat(bnbAmount) > wallet?.bnbBalance}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="apgwhrfg0" data-path="src/components/SwapInterface.tsx">
 
@@ -302,9 +303,9 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                 }
 
                 <Button
-                  onClick={handleBMToBNB}
+                  onClick={() => handleBMToBNB('bm-to-bnb')}
                   // disabled={isLoading || !bmAmount || parseFloat(bmAmount) > bmTokens.unlocked}
-                  disabled={userInfo.coin > userInfo.coinLock ? false : true}
+                  disabled={userInfo?.coin > userInfo?.coinLock ? false : true}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600" data-id="clxh2624h" data-path="src/components/SwapInterface.tsx">
 
                   <ArrowRightLeft className="w-4 h-4 mr-2" data-id="mq45jjxzg" data-path="src/components/SwapInterface.tsx" />

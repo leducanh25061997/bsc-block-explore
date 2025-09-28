@@ -116,12 +116,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   const [amount, setAmount] = useState<string>('');
   const [step, setStep] = useState<'form' | 'confirm' | 'success'>('form');
   const [isLoading, setIsLoading] = useState(false);
-  const decimals = 4;
-  const { writeContractAsync, isPending } = useWriteContract();
-  const sendTransactionMutation = useSendTransactionMutation();
-  const { isDisabled } = useDisableButtonByTime(7, 19);
+  // const decimals = 4;
+  // const { writeContractAsync, isPending } = useWriteContract();
+  // const sendTransactionMutation = useSendTransactionMutation();
+  const { isDisabled } = useDisableButtonByTime(6, 19);
   const [registerValue, setRegisterValue] = useState<Array<IRegister>>([]);
-  // console.log(registerValue, "registerValue");
+  console.log(isDisabled, "isDisabled");
   // console.log(hasTodayData(registerValue));
   const sendRegisterMutation = useSendRegisterMutation();
 
@@ -508,7 +508,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
             <h4 className="font-semibold text-blue-800 mb-2" data-id="vgi0i8ajm" data-path="src/components/TransactionForm.tsx">Transaction Limits</h4>
             <ul className="text-sm text-blue-700 space-y-1" data-id="eu2ze3zww" data-path="src/components/TransactionForm.tsx">
               <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Transaction registration time: 7:00 AM – 7:00 PM.</li>
-              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• From 7:00 PM – 8:00 PM, the system will verify the registration information.</li>
+              <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• From 7:00 PM – 6:00 AM, the system will verify the registration information.</li>
               <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Transaction execution time: 8:00 PM – 7:00 AM.</li>
               <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Reward: 1% – 1.5% of the total transaction volume, received directly in BM tokens.</li>
               <li data-id="wilbr2t8t" data-path="src/components/TransactionForm.tsx">• Maximum 10 transactions per day</li>
@@ -522,7 +522,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              if (isDisabled) {
+              if (!isDisabled) {
                 if (!hasTodayData(registerValue)) {
                   handleRegister()
                 }
@@ -537,7 +537,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
             data-path="src/components/TransactionForm.tsx"
           >
 
-            {isDisabled ? "Register" : "Trading Window Closed"}
+            {!isDisabled ? "Register" : "Trading Window Closed"}
           </Button>
           {/* </form> */}
         </CardContent>
