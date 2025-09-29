@@ -119,7 +119,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   // const decimals = 4;
   // const { writeContractAsync, isPending } = useWriteContract();
   // const sendTransactionMutation = useSendTransactionMutation();
-  const { isDisabled } = useDisableButtonByTime(7, 19);
+  const { isDisabled: isNotDisableButtonRegister } = useDisableButtonByTime(7, 19);
+  const { isDisabled: isNotDisableButtonTranfer } = useDisableButtonByTime(6, 20); // mở từ 20h đến 6h 
   const [registerValue, setRegisterValue] = useState<Array<IRegister>>([]);
   // console.log(isDisabled, "isDisabled");
   // console.log(hasTodayData(registerValue));
@@ -522,11 +523,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              if (isDisabled) {
+              if (isNotDisableButtonRegister) {
                 if (!hasTodayData(registerValue)) {
                   handleRegister()
                 }
-              } else {
+              }  
+              if (!isNotDisableButtonTranfer){
                 handleTranfer()
               }
               // handleTranfer()
@@ -537,7 +539,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
             data-path="src/components/TransactionForm.tsx"
           >
 
-            {!isDisabled ? "Register" : "Trading Window Closed"}
+            {!isNotDisableButtonRegister ? "Register" : "Trading Window Closed"}
           </Button>
           {/* </form> */}
         </CardContent>
