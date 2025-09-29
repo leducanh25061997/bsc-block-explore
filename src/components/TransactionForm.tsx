@@ -119,9 +119,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   // const decimals = 4;
   // const { writeContractAsync, isPending } = useWriteContract();
   // const sendTransactionMutation = useSendTransactionMutation();
-  const { isDisabled } = useDisableButtonByTime(6, 19);
+  const { isDisabled } = useDisableButtonByTime(7, 19);
   const [registerValue, setRegisterValue] = useState<Array<IRegister>>([]);
-  console.log(isDisabled, "isDisabled");
+  // console.log(isDisabled, "isDisabled");
   // console.log(hasTodayData(registerValue));
   const sendRegisterMutation = useSendRegisterMutation();
 
@@ -522,7 +522,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              if (!isDisabled) {
+              if (isDisabled) {
                 if (!hasTodayData(registerValue)) {
                   handleRegister()
                 }

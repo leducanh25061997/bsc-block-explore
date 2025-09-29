@@ -79,6 +79,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
 
   const handleBMToBNB = async (type: 'bnb-to-bm' | 'bm-to-bnb') => {
     if (!userInfo) return;
+    // console.log(type, '=====>>>>')
     if (type === 'bnb-to-bm') {
       try {
         const provider = new ethers.BrowserProvider(window.ethereum as unknown as ethers.Eip1193Provider);
@@ -303,7 +304,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
 
                   <Button
                     onClick={() => handleBMToBNB('bnb-to-bm')}
-                    // disabled={isLoading || !bnbAmount || parseFloat(bnbAmount) > wallet?.bnbBalance}
+                    disabled={isLoading || !bnbAmount || parseFloat(bnbAmount) > wallet?.bnbBalance}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="apgwhrfg0" data-path="src/components/SwapInterface.tsx">
 
                     <ArrowRightLeft className="w-4 h-4 mr-2" data-id="ws8myefjd" data-path="src/components/SwapInterface.tsx" />
@@ -344,7 +345,7 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
 
                   <Button
                     onClick={() => handleBMToBNB('bm-to-bnb')}
-                    // disabled={userInfo?.coin > userInfo?.coinLock ? false : true}
+                    disabled={userInfo?.coin > userInfo?.coinLock ? false : true}
                     className="w-full bg-gradient-to-r from-green-600 to-blue-600" data-id="clxh2624h" data-path="src/components/SwapInterface.tsx">
 
                     <ArrowRightLeft className="w-4 h-4 mr-2" data-id="mq45jjxzg" data-path="src/components/SwapInterface.tsx" />
