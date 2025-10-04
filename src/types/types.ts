@@ -116,3 +116,18 @@ export interface ISendTransaction {
   s: string;
   v: string;
 }
+
+export interface IHistories {
+  address: string;
+  amount: number;
+  cointype: string;
+  createdAt: string;
+  status: string;
+  timeCollect: number;
+  tx: string;
+  typeData: string;
+  updatedAt: string;
+  _id: string;
+  from: string;
+  blockNumber?: string
+}

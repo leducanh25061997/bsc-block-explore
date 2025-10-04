@@ -9,8 +9,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useAppKitAccount, useAppKitBalance } from '@reown/appkit/react';
 import useUserState from '@/stores/user';
 import { ethers } from "ethers";
-import { useSendTransactionMutation } from '@/services/service';
-import { ISendTransaction } from '@/types/types';
+import { getHistory, useGetHistoryMutation, useSendTransactionMutation } from '@/services/service';
+import { IHistories, ISendTransaction } from '@/types/types';
 import { toast as ToastCus } from 'react-toastify';
 import { Modal } from './ui/modal';
 import { ModalWidthDraw } from './ModalWidthDraw';
@@ -31,18 +31,28 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const { userInfo } = useUserState();
   const [gereralBalance, setGereralBalance] = useState<any>(0)
   const [isModal, setIsModal] = useState<boolean>(false);
-  // console.log(userInfo, "userInfo")
+  const [histories, setHistories] = useState<Array<IHistories>>([]);
+  console.log(histories, "histories")
 
   // Sử dụng URL của một node BSC công khai
   const bscProviderUrl = "https://bsc-dataseed.binance.org/";
+  // const { data: histories } = useGetHistoryMutation({ address });
+  // console.log(histories, 'histories')
 
   const provider = new ethers.JsonRpcProvider(bscProviderUrl);
 
   useEffect(() => {
     if (userInfo?.secondAddress) {
-      getBnbBalance(userInfo?.secondAddress)
+      fetchHistories(userInfo?.address);
+      getBnbBalance(userInfo?.secondAddress);
     }
-  }, [userInfo])
+  }, [userInfo]);
+
+  const fetchHistories = async (_address: string, type?: string) => {
+    const data = await getHistory({ address: _address, type });
+    console.log(data, 'data');
+    setHistories(data.histories);
+  }
 
   async function getBnbBalance(walletAddress: string) {
     try {
@@ -75,14 +85,13 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   };
 
   const formatTimestamp = (timestamp: number) => {
-    console.log("======> FORMT TIMESTAP")
     return new Date(timestamp).toLocaleString();
   };
 
   const getTransactionTypeColor = (type: string) => {
     switch (type) {
       case 'block': return 'bg-blue-100 text-blue-800';
-      case 'swap': return 'bg-green-100 text-green-800';
+      case 'swap to BM': return 'bg-green-100 text-green-800';
       case 'withdraw': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -290,47 +299,47 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardTitle>
         </CardHeader>
         <CardContent data-id="q9b67au6u" data-path="src/components/WalletDashboard.tsx">
-          <Tabs defaultValue="all" className="w-full" data-id="eg4bq56zb" data-path="src/components/WalletDashboard.tsx">
+          <Tabs defaultValue="all" onValueChange={v => fetchHistories(address, v === 'all' ? '' : v)} className="w-full" data-id="eg4bq56zb" data-path="src/components/WalletDashboard.tsx">
             <TabsList className="grid w-full grid-cols-4" data-id="we8vkxf6s" data-path="src/components/WalletDashboard.tsx">
               <TabsTrigger value="all" data-id="ea4facbwo" data-path="src/components/WalletDashboard.tsx">All</TabsTrigger>
-              <TabsTrigger value="block" data-id="azqb7mq3d" data-path="src/components/WalletDashboard.tsx">Block Transactions</TabsTrigger>
+              <TabsTrigger value="transaction" data-id="azqb7mq3d" data-path="src/components/WalletDashboard.tsx">Block Transactions</TabsTrigger>
               <TabsTrigger value="swap" data-id="saqjhsiuj" data-path="src/components/WalletDashboard.tsx">Swaps</TabsTrigger>
               <TabsTrigger value="withdraw" data-id="decqu8597" data-path="src/components/WalletDashboard.tsx">Withdrawals</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-4" data-id="mzi20v242" data-path="src/components/WalletDashboard.tsx">
-              {transactions.length === 0 ?
+              {histories.length === 0 ?
                 <div className="text-center py-8 text-gray-500" data-id="mfxmuwfqu" data-path="src/components/WalletDashboard.tsx">
                   No transactions yet
                 </div> :
 
                 <div className="space-y-3" data-id="mbp3ihnp4" data-path="src/components/WalletDashboard.tsx">
-                  {transactions.map((tx) =>
-                    <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="92i5b7c3e" data-path="src/components/WalletDashboard.tsx">
+                  {histories.map((history) =>
+                    <div key={history._id} className="flex items-center justify-between p-4 border rounded-lg" data-id="92i5b7c3e" data-path="src/components/WalletDashboard.tsx">
                       <div className="flex-1" data-id="p5xv4gh8d" data-path="src/components/WalletDashboard.tsx">
                         <div className="flex items-center space-x-2 mb-1" data-id="tkq5ytddm" data-path="src/components/WalletDashboard.tsx">
-                          <Badge className={getTransactionTypeColor(tx.type)} data-id="38kjhkgt7" data-path="src/components/WalletDashboard.tsx">
-                            {tx.type.toUpperCase()}
+                          <Badge className={getTransactionTypeColor(history.typeData)} data-id="38kjhkgt7" data-path="src/components/WalletDashboard.tsx">
+                            {history.typeData.toUpperCase()}
                           </Badge>
-                          {tx.blockNumber &&
+                          {/* {history.blockNumber &&
                             <span className="text-sm text-gray-500" data-id="r5cnfbpme" data-path="src/components/WalletDashboard.tsx">Block #{tx.blockNumber}</span>
-                          }
+                          } */}
                         </div>
-                        <div className="text-sm text-gray-600" data-id="i6plvmdtk" data-path="src/components/WalletDashboard.tsx">
-                          From: {tx.from.slice(0, 8)}...{tx.from.slice(-6)} →
-                          To: {tx.to.slice(0, 8)}...{tx.to.slice(-6)}
-                        </div>
+                        {/* <div className="text-sm text-gray-600" data-id="i6plvmdtk" data-path="src/components/WalletDashboard.tsx">
+                          From: {history.from.slice(0, 8)}...{history.from.slice(-6)} →
+                          To: {history.to.slice(0, 8)}...{history.to.slice(-6)}
+                        </div> */}
                         <div className="text-xs text-gray-500" data-id="p8qwqdc11" data-path="src/components/WalletDashboard.tsx">
-                          {formatTimestamp(tx.timestamp)}
+                          {formatTimestamp(history.timeCollect)}
                         </div>
                       </div>
                       <div className="text-right" data-id="k1eq91rb1" data-path="src/components/WalletDashboard.tsx">
                         <div className="font-semibold" data-id="wwnr7vscm" data-path="src/components/WalletDashboard.tsx">
-                          {tx.amount.toFixed(4)} {tx.type === 'swap' && tx.from === wallet.address ? 'BNB' : 'BNB'}
+                          {history.amount.toFixed(4)} {history.typeData === 'swap' && history?.from === address ? 'BNB' : 'BNB'}
                         </div>
-                        {tx.reward &&
+                        {history.amount &&
                           <div className="text-sm text-green-600" data-id="vvxn2mzsf" data-path="src/components/WalletDashboard.tsx">
-                            +{tx.reward.toFixed(4)} BM reward
+                            +{history.amount.toFixed(4)} BM reward
                           </div>
                         }
                       </div>
@@ -340,26 +349,26 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
               }
             </TabsContent>
 
-            <TabsContent value="block" data-id="1qgwben62" data-path="src/components/WalletDashboard.tsx">
+            <TabsContent value="transaction" data-id="1qgwben62" data-path="src/components/WalletDashboard.tsx">
               <div className="space-y-3" data-id="ycqyetoit" data-path="src/components/WalletDashboard.tsx">
-                {transactions.filter((tx) => tx.type === 'block').map((tx) =>
-                  <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="znkr1lmth" data-path="src/components/WalletDashboard.tsx">
+                {histories.map((tx) =>
+                  <div key={tx._id} className="flex items-center justify-between p-4 border rounded-lg" data-id="znkr1lmth" data-path="src/components/WalletDashboard.tsx">
                     <div className="flex-1" data-id="83zvggsko" data-path="src/components/WalletDashboard.tsx">
                       <div className="flex items-center space-x-2 mb-1" data-id="16728lu3x" data-path="src/components/WalletDashboard.tsx">
-                        <Badge className="bg-blue-100 text-blue-800" data-id="m9gr285xm" data-path="src/components/WalletDashboard.tsx">BLOCK</Badge>
+                        <Badge className="bg-blue-100 text-blue-800" data-id="m9gr285xm" data-path="src/components/WalletDashboard.tsx">BLOCK TRANSACTION</Badge>
                         <span className="text-sm text-gray-500" data-id="bp4842s3b" data-path="src/components/WalletDashboard.tsx">Block #{tx.blockNumber}</span>
                       </div>
-                      <div className="text-sm text-gray-600" data-id="hcisto5e3" data-path="src/components/WalletDashboard.tsx">
+                      {/* <div className="text-sm text-gray-600" data-id="hcisto5e3" data-path="src/components/WalletDashboard.tsx">
                         {tx.from.slice(0, 8)}...{tx.from.slice(-6)} → {tx.to.slice(0, 8)}...{tx.to.slice(-6)}
-                      </div>
+                      </div> */}
                       <div className="text-xs text-gray-500" data-id="nfnjpdc2x" data-path="src/components/WalletDashboard.tsx">
-                        {formatTimestamp(tx.timestamp)}
+                        {formatTimestamp(tx.timeCollect)}
                       </div>
                     </div>
                     <div className="text-right" data-id="egg2p48st" data-path="src/components/WalletDashboard.tsx">
                       <div className="font-semibold" data-id="3hgay3r37" data-path="src/components/WalletDashboard.tsx">{tx.amount.toFixed(4)} BNB</div>
                       <div className="text-sm text-green-600" data-id="7piw4f4hd" data-path="src/components/WalletDashboard.tsx">
-                        +{tx.reward?.toFixed(4)} BM reward
+                        +{tx.amount?.toFixed(4)} BM reward
                       </div>
                     </div>
                   </div>
@@ -369,15 +378,15 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
 
             <TabsContent value="swap" data-id="67ilx7v31" data-path="src/components/WalletDashboard.tsx">
               <div className="space-y-3" data-id="h5df3wtsg" data-path="src/components/WalletDashboard.tsx">
-                {transactions.filter((tx) => tx.type === 'swap').map((tx) =>
-                  <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="zlc93q3dm" data-path="src/components/WalletDashboard.tsx">
+                {histories.filter((tx) => tx.typeData === 'swap to BM').map((tx) =>
+                  <div key={tx._id} className="flex items-center justify-between p-4 border rounded-lg" data-id="zlc93q3dm" data-path="src/components/WalletDashboard.tsx">
                     <div className="flex-1" data-id="utm4momr9" data-path="src/components/WalletDashboard.tsx">
                       <Badge className="bg-green-100 text-green-800 mb-2" data-id="6zmitrejf" data-path="src/components/WalletDashboard.tsx">SWAP</Badge>
                       <div className="text-sm text-gray-600" data-id="2bdta3b3n" data-path="src/components/WalletDashboard.tsx">
-                        {tx.from === wallet.address ? 'BNB → BM' : 'BM → BNB'}
+                        {tx.from === address ? 'BNB → BM' : 'BM → BNB'}
                       </div>
                       <div className="text-xs text-gray-500" data-id="c4c03eox4" data-path="src/components/WalletDashboard.tsx">
-                        {formatTimestamp(tx.timestamp)}
+                        {formatTimestamp(tx.timeCollect)}
                       </div>
                     </div>
                     <div className="text-right" data-id="qvnhu8xk1" data-path="src/components/WalletDashboard.tsx">
@@ -390,15 +399,15 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
 
             <TabsContent value="withdraw" data-id="f9fge4lwe" data-path="src/components/WalletDashboard.tsx">
               <div className="space-y-3" data-id="ta5kp69m9" data-path="src/components/WalletDashboard.tsx">
-                {transactions.filter((tx) => tx.type === 'withdraw').map((tx) =>
-                  <div key={tx.id} className="flex items-center justify-between p-4 border rounded-lg" data-id="2ef92afpv" data-path="src/components/WalletDashboard.tsx">
+                {histories.filter((tx) => tx.typeData === 'withdraw').map((tx) =>
+                  <div key={tx._id} className="flex items-center justify-between p-4 border rounded-lg" data-id="2ef92afpv" data-path="src/components/WalletDashboard.tsx">
                     <div className="flex-1" data-id="px7ksmkb8" data-path="src/components/WalletDashboard.tsx">
                       <Badge className="bg-purple-100 text-purple-800 mb-2" data-id="07zhls2bv" data-path="src/components/WalletDashboard.tsx">WITHDRAWAL</Badge>
                       <div className="text-sm text-gray-600" data-id="qn42yt6fa" data-path="src/components/WalletDashboard.tsx">
                         System → Connected Wallet
                       </div>
                       <div className="text-xs text-gray-500" data-id="k5q190sk1" data-path="src/components/WalletDashboard.tsx">
-                        {formatTimestamp(tx.timestamp)}
+                        {formatTimestamp(tx.timeCollect)}
                       </div>
                     </div>
                     <div className="text-right" data-id="3240zgcvy" data-path="src/components/WalletDashboard.tsx">

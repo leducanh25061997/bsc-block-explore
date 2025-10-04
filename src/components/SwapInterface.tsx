@@ -295,8 +295,8 @@ const SwapInterface: React.FC<SwapInterfaceProps> = ({ balance }) => {
                       <div className="flex items-center justify-between" data-id="fwnj80iv5" data-path="src/components/SwapInterface.tsx">
                         <span data-id="27y040wzs" data-path="src/components/SwapInterface.tsx">You will receive:</span>
                         <span className="font-bold text-blue-600" data-id="gokgoa6nl" data-path="src/components/SwapInterface.tsx">
-                          {/* {calculateBMFromBNB(bnbAmount)} BM */}
-                          {"100"} BM
+                          {calculateBNBFromBM(bnbAmount)} BM
+                          {/* {"100"} BM */}
                         </span>
                       </div>
                     </div>
