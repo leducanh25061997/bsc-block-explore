@@ -84,7 +84,7 @@ export const ModalWidthDraw: React.FC<{ setIsModal: (v: boolean) => void}> = ({ 
 
                 <SelectItem value={userInfo?.secondAddress} data-id="wandes41u" data-path="src/components/TransactionForm.tsx">
                   Connected General Wallet ({userInfo?.secondAddress.slice(0, 8)}...{userInfo?.secondAddress.slice(-6)})
-                  <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge>
+                  {/* <Badge variant="outline" className="ml-2" data-id="tbk8p1i94" data-path="src/components/TransactionForm.tsx">Max: 100 USDT</Badge> */}
                 </SelectItem>
               </SelectContent>
             </Select>

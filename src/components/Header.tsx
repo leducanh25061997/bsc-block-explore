@@ -80,11 +80,11 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 onSuccess: (response) => {
                   
                 },
-                onError: (err) => {
-                  toast.error(`${err?.message || "Invalid Data"} 👋`, {
-                    position: 'top-left',
-                  });
-                },
+                // onError: (err) => {
+                //   toast.error(`${err?.message || "Invalid Data"} 👋`, {
+                //     position: 'top-left',
+                //   });
+                // },
               });
               setIsShowAlerConnect(false)
             }

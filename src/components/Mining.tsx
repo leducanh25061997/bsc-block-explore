@@ -160,7 +160,7 @@ const Mining: React.FC = () => {
                 'Daily Limit Reached' :
                 isTransactionTime ?
                   'Mine BM Tokens' :
-                  'Mining Window Closed'}
+                  'Mining BM'}
             </Button>
           </CardContent>
         </Card>
