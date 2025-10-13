@@ -253,7 +253,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="a4kzgb9z2" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-blue-600" data-id="tediqjmu5" data-path="src/components/WalletDashboard.tsx">
-              {userInfo.coin.toFixed(6)}
+              {userInfo?.coin?.toFixed(6)}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="nis60iwjl" data-path="src/components/WalletDashboard.tsx">Total earned BM tokens</p>
           </CardContent>
@@ -268,7 +268,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="pvrp5wkfb" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-green-600" data-id="m8usadu39" data-path="src/components/WalletDashboard.tsx">
-              {(userInfo.coin - userInfo.coinLock).toFixed(6)}
+              {(userInfo?.coin - userInfo?.coinLock).toFixed(6)}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="fvuyddky8" data-path="src/components/WalletDashboard.tsx">Available for trading</p>
           </CardContent>
