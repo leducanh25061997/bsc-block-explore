@@ -283,7 +283,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="wv1t9ecmb" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-orange-600" data-id="m7bxao2ua" data-path="src/components/WalletDashboard.tsx">
-              {userInfo.coinLock}
+              {userInfo?.coinLock || 0}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="b41dskuhl" data-path="src/components/WalletDashboard.tsx">Unlocking over 60 days</p>
           </CardContent>
