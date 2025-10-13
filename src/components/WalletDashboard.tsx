@@ -268,7 +268,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardHeader>
           <CardContent data-id="pvrp5wkfb" data-path="src/components/WalletDashboard.tsx">
             <div className="text-3xl font-bold text-green-600" data-id="m8usadu39" data-path="src/components/WalletDashboard.tsx">
-              {(userInfo?.coin - userInfo?.coinLock).toFixed(6)}
+              {((userInfo?.coin || 0) - (userInfo?.coinLock || 0)).toFixed(6)}
             </div>
             <p className="text-sm text-gray-500 mt-1" data-id="fvuyddky8" data-path="src/components/WalletDashboard.tsx">Available for trading</p>
           </CardContent>
