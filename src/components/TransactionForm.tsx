@@ -539,7 +539,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
             data-path="src/components/TransactionForm.tsx"
           >
 
-            {!isNotDisableButtonRegister ? "Register" : "Tranfer"}
+            {isNotDisableButtonRegister ? "Register" : "Tranfer"}
           </Button>
           {/* </form> */}
         </CardContent>
