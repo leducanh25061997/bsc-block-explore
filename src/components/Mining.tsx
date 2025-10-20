@@ -178,7 +178,7 @@ const Mining: React.FC = () => {
               <div className="flex items-center justify-between mb-2" data-id="7jwe4r6pa" data-path="src/components/Mining.tsx">
                 <span className="font-medium" data-id="72haqmk7w" data-path="src/components/Mining.tsx">Total BM Token Holdings:</span>
                 <span className="font-bold text-green-600" data-id="1u50aajn2" data-path="src/components/Mining.tsx">
-                  {userInfo?.coin.toFixed(6)} BM
+                  {userInfo?.coin ? userInfo?.coin?.toFixed(6) : 0} BM
                 </span>
               </div>
               <div className="flex items-center justify-between mb-2" data-id="shgpqq44j" data-path="src/components/Mining.tsx">

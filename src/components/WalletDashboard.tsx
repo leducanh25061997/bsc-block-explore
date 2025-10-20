@@ -299,7 +299,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
           </CardTitle>
         </CardHeader>
         <CardContent data-id="q9b67au6u" data-path="src/components/WalletDashboard.tsx">
-          <Tabs defaultValue="all" onValueChange={v => fetchHistories(address, v === 'all' ? '' : v)} className="w-full" data-id="eg4bq56zb" data-path="src/components/WalletDashboard.tsx">
+          <Tabs defaultValue="all" onValueChange={v => fetchHistories(address, v === 'all' ? '' : v === 'withdraw' ? 'withdraw to wallet' : v)} className="w-full" data-id="eg4bq56zb" data-path="src/components/WalletDashboard.tsx">
             <TabsList className="grid w-full grid-cols-4" data-id="we8vkxf6s" data-path="src/components/WalletDashboard.tsx">
               <TabsTrigger value="all" data-id="ea4facbwo" data-path="src/components/WalletDashboard.tsx">All</TabsTrigger>
               <TabsTrigger value="transaction" data-id="azqb7mq3d" data-path="src/components/WalletDashboard.tsx">Block Transactions</TabsTrigger>
