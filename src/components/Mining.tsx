@@ -31,8 +31,8 @@ const Mining: React.FC = () => {
   const handleAutoMining = () => {
     if (userInfo) {
       const payload: IMinningPayload = {
-        address: userInfo.address,
-        isAuto: !userInfo.isAuto,
+        address: userInfo?.address,
+        isAuto: !userInfo?.isAuto,
         r: userInfo.r,
         s: userInfo.s,
         v: userInfo.v
@@ -233,7 +233,7 @@ const Mining: React.FC = () => {
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="z8q547rev" data-path="src/components/Mining.tsx">
 
               {/* <Pickaxe className="w-4 h-4 mr-2" data-id="a07mxe6y5" data-path="src/components/Mining.tsx" /> */}
-              {!userInfo.isAuto ? "Auto Mining" : "Cancel Auto"}
+              {!userInfo?.isAuto ? "Auto Mining" : "Cancel Auto"}
             </Button>
 
           </CardContent>
