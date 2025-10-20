@@ -113,11 +113,11 @@ const Mining: React.FC = () => {
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg" data-id="0ywzg17gx" data-path="src/components/Mining.tsx">
               <div className="flex items-center justify-between mb-2" data-id="5ll1m2vst" data-path="src/components/Mining.tsx">
                 <span className="font-medium" data-id="a4zel76vm" data-path="src/components/Mining.tsx">Total BM Token Holdings:</span>
-                <span className="font-bold text-blue-600" data-id="bh3q3di15" data-path="src/components/Mining.tsx">{userInfo.coin.toFixed(6)} BM</span>
+                <span className="font-bold text-blue-600" data-id="bh3q3di15" data-path="src/components/Mining.tsx">{userInfo?.coin ? userInfo.coin.toFixed(6) : 0} BM</span>
               </div>
               <div className="flex items-center justify-between mb-2" data-id="k2jgh50np" data-path="src/components/Mining.tsx">
                 <span className="font-medium" data-id="z7epu4fbg" data-path="src/components/Mining.tsx">Total BM Beign Mined:</span>
-                <span className="font-semibold" data-id="6e8g7kzp4" data-path="src/components/Mining.tsx">{userInfo.coinLock.toFixed(6)} BM</span>
+                <span className="font-semibold" data-id="6e8g7kzp4" data-path="src/components/Mining.tsx">{userInfo?.coinLock ? userInfo?.coinLock.toFixed(6) : 0} BM</span>
               </div>
               {/* <div className="flex items-center justify-between" data-id="ec6a1oafo" data-path="src/components/Mining.tsx">
                 <span className="font-medium" data-id="xzkagnapj" data-path="src/components/Mining.tsx">Last Mined:</span>
@@ -152,7 +152,7 @@ const Mining: React.FC = () => {
             <Button
               onClick={handleMining}
               // disabled={!isTransactionTime || mining.dailyMiningCount >= 2}
-              disabled={!userInfo?.isAuto && userInfo.coinLock > 0 ? true : false}
+              disabled={!userInfo?.isAuto && userInfo?.coinLock > 0 ? true : false}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600" data-id="z8q547rev" data-path="src/components/Mining.tsx">
 
               <Pickaxe className="w-4 h-4 mr-2" data-id="a07mxe6y5" data-path="src/components/Mining.tsx" />
@@ -183,7 +183,7 @@ const Mining: React.FC = () => {
               </div>
               <div className="flex items-center justify-between mb-2" data-id="shgpqq44j" data-path="src/components/Mining.tsx">
                 <span className="font-medium" data-id="8x0zndsb0" data-path="src/components/Mining.tsx">Total BM Beign Mined:</span>
-                <span className="font-semibold" data-id="pj47qzubz" data-path="src/components/Mining.tsx">{userInfo.coinLock.toFixed(6)} BM</span>
+                <span className="font-semibold" data-id="pj47qzubz" data-path="src/components/Mining.tsx">{userInfo?.coinLock ? userInfo.coinLock.toFixed(6) : 0} BM</span>
               </div>
               <div className="text-xs text-gray-600" data-id="pqq39nn97" data-path="src/components/Mining.tsx">
                 Auto-mining rate is 0.1% of your total BM tokens per hour
