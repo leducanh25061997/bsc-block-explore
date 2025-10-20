@@ -16,9 +16,10 @@ import { Modal } from './ui/modal';
 import { ModalWidthDraw } from './ModalWidthDraw';
 interface WalletDashboardProps {
   balance?: any;
+  activeTab: string;
 }
 
-const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
+const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance, activeTab }) => {
   const {
     wallet,
     systemWallet,
@@ -32,7 +33,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
   const [gereralBalance, setGereralBalance] = useState<any>(0)
   const [isModal, setIsModal] = useState<boolean>(false);
   const [histories, setHistories] = useState<Array<IHistories>>([]);
-  console.log(histories, "histories")
+  // console.log(histories, "histories")
 
   // Sử dụng URL của một node BSC công khai
   const bscProviderUrl = "https://bsc-dataseed.binance.org/";
@@ -46,7 +47,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance }) => {
       fetchHistories(userInfo?.address);
       getBnbBalance(userInfo?.secondAddress);
     }
-  }, [userInfo]);
+  }, [userInfo, activeTab]);
 
   const fetchHistories = async (_address: string, type?: string) => {
     const data = await getHistory({ address: _address, type });

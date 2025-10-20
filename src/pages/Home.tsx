@@ -106,7 +106,7 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
       case 'transaction':
         return <TransactionForm setActiveTab={setActiveTab} selectedBlock={selectedBlock} data-id="kd9ov61g3" data-path="src/App.tsx" />;
       case 'wallet':
-        return <WalletDashboard data-id="razaddntj" data-path="src/App.tsx" balance={balance} />;
+        return <WalletDashboard data-id="razaddntj" data-path="src/App.tsx" balance={balance} activeTab={activeTab} />;
       case 'mining':
         return <Mining data-id="ra5yrtjq6" data-path="src/App.tsx" />;
       case 'swap':
