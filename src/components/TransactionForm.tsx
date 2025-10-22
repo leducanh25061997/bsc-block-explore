@@ -111,6 +111,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   const { address, isConnected } = useAppKitAccount();
   const addTransitionMutation = useAddTransitionMutation();
   const { userInfo, setTradeReg } = useUserState();
+  console.log(userInfo, 'userInfo')
   const [fromWallet, setFromWallet] = useState<string>('');
   const [toAddress, setToAddress] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -304,9 +305,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
       const feeWei = gasPrice * estimatedGas;
       const feeBNB = Number(formatUnits(feeWei, 18));
 
-      console.log("Gas Estimate:", estimatedGas.toString());
-      console.log("Gas Price:", formatUnits(gasPrice, 9), "gwei"); 
-      console.log("Fee (BNB):", feeBNB);
+      // console.log("Gas Estimate:", estimatedGas.toString());
+      // console.log("Gas Price:", formatUnits(gasPrice, 9), "gwei"); 
+      // console.log("Fee (BNB):", feeBNB);
 
 
       const txHash = await sendTransaction(config, {
@@ -477,9 +478,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
             <Input
               id="toAddress"
               type="text"
-              placeholder="0x..."
+              placeholder={`${userInfo?.secondAddress ? `${userInfo?.secondAddress.slice(0, 8)}...${userInfo?.secondAddress.slice(-8)}` : '0x...'}`}
               disabled
-              value={toAddress}
+              // value={toAddress}
               onChange={(e) => setToAddress(e.target.value)}
               required
               className="font-mono" data-id="u54jok10s" data-path="src/components/TransactionForm.tsx" />

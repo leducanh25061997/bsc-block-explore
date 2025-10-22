@@ -14,6 +14,7 @@ import { IHistories, ISendTransaction } from '@/types/types';
 import { toast as ToastCus } from 'react-toastify';
 import { Modal } from './ui/modal';
 import { ModalWidthDraw } from './ModalWidthDraw';
+import moment from 'moment';
 interface WalletDashboardProps {
   balance?: any;
   activeTab: string;
@@ -408,7 +409,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance, activeTab })
                         System → Connected Wallet
                       </div>
                       <div className="text-xs text-gray-500" data-id="k5q190sk1" data-path="src/components/WalletDashboard.tsx">
-                        {formatTimestamp(tx.timeCollect)}
+                        {moment(new Date(tx.createdAt)).format('YYYY-MM-DD HH:mm:ss')}
                       </div>
                     </div>
                     <div className="text-right" data-id="3240zgcvy" data-path="src/components/WalletDashboard.tsx">
