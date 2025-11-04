@@ -43,18 +43,18 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
   const decimals = 6;
   const { fetchBalance } = useAppKitBalance();
   const [balance, setBalance] = useState(null);
-  const { setUserInfo, setTradeReg } = useUserState();
+  // const { setUserInfo, setTradeReg } = useUserState();
   // const [blocks, setBlocks] = useState<Array<IBlock>>([]);
   // console.log("====>")
 
   useEffect(() => {
     if (address) {
-      const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
-      const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
-      setUserInfo(userInfo);
-      if (tradeRed) {
-        setTradeReg(tradeRed)
-      }
+      // const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
+      // const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+      // setUserInfo(userInfo);
+      // if (tradeRed) {
+      //   setTradeReg(tradeRed)
+      // }
       fetchBalance().then(setBalance);
     }
   }, [address]);

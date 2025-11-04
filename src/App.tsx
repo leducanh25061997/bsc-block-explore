@@ -24,6 +24,9 @@ import { mainnet } from 'viem/chains';
 import Home from './pages/Home';
 import { IBlock } from './types/types';
 import { getBlocks } from './services/service';
+import { CookiesStorage } from './lib/cookie-storage';
+import { StorageKeys } from './constants/storage-keys';
+import useUserState from './stores/user';
 const generalConfig = {
   projectId,
   networks,
@@ -49,6 +52,16 @@ const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedBlock, setSelectedBlock] = useState<string>("");
   const [blocks, setBlocks] = useState<Array<IBlock>>([]);
+  const { setUserInfo, setTradeReg } = useUserState();
+
+  useEffect(() => {
+    const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
+    const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+    setUserInfo(userInfo);
+    if (tradeRed) {
+      setTradeReg(tradeRed)
+    }
+  }, []);
 
   useEffect(() => {
     fetchBlocks();
@@ -81,13 +94,13 @@ const App = () => {
               <div className="flex" data-id="i1avv64bb" data-path="src/App.tsx">
                 <div className='hidden md:flex'>
                   <Sidebar activeTab={activeTab} onTabChange={(v) => handleActivedTab(v, "SIDEBAR")} data-id="sj9d2u7u0" data-path="src/App.tsx" />
-                </div>     
+                </div>
                 <main className="flex-1 p-6 overflow-y-auto" data-id="j3qbmx7az" data-path="src/App.tsx">
                   {/* {renderContent()} */}
-                  <Home 
+                  <Home
                     blocks={blocks}
-                    activeTab={activeTab} 
-                    setActiveTab={handleActivedTab} 
+                    activeTab={activeTab}
+                    setActiveTab={handleActivedTab}
                     selectedBlock={selectedBlock}
                     setSelectedBlock={setSelectedBlock}
                   />
