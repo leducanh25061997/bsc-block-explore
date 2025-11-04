@@ -25,7 +25,7 @@ const Mining: React.FC = () => {
   const { toast } = useToast();
   const { address, isConnected } = useAppKitAccount();
   const { userInfo, setUserInfo } = useUserState();
-  console.log(userInfo, "userInfo")
+  // console.log(userInfo, "userInfo")
   const createMinningMutation = useCreateMinningMutation();
 
   const handleAutoMining = () => {

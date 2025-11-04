@@ -8,7 +8,6 @@ import { IPlatformStatistics } from '@/types/types';
 const Statistics: React.FC = () => {
   const { transactions, bmTokens, mining, referral } = useBlockMint();
   const [ statistics, setStatistics ] = useState<IPlatformStatistics>();
-  console.log(statistics, "statistics")
   
   useEffect(() => {
     fetchMainConfig()

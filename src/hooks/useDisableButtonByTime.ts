@@ -21,7 +21,7 @@ export function useDisableButtonByTime(startHour: number, endHour: number) {
     if (hours >= 7) {
       setTradeReg(null);
       CookiesStorage.clearCookieData(StorageKeys.TradeReq);
-      console.log("Cookie setTradeReg removed at", now.toLocaleTimeString());
+      // console.log("Cookie setTradeReg removed at", now.toLocaleTimeString());
     }
 
     const next = new Date(now.getTime() + 60 * 60 * 1000);
@@ -33,7 +33,7 @@ export function useDisableButtonByTime(startHour: number, endHour: number) {
 
     const interval = setInterval(() => {
       checkTime();
-      console.log("Cron check at:", new Date().toLocaleTimeString());
+      // console.log("Cron check at:", new Date().toLocaleTimeString());
     }, 60 * 60 * 1000);
 
     return () => clearInterval(interval);

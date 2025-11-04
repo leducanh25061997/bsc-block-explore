@@ -111,7 +111,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
   const { address, isConnected } = useAppKitAccount();
   const addTransitionMutation = useAddTransitionMutation();
   const { userInfo, setTradeReg } = useUserState();
-  console.log(userInfo, 'userInfo')
+  // console.log(userInfo, 'userInfo')
   const [fromWallet, setFromWallet] = useState<string>('');
   const [toAddress, setToAddress] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -223,7 +223,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
         {
           onSuccess: (res) => {
             // console.log(res?.tradeReg, "res?.tradeReg")
-            ToastCus.success('Connect wallet success.', {
+            ToastCus.success('Register success.', {
               position: 'top-right',
             });
             if (res?.tradeReg?.length) {
@@ -474,14 +474,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           </div>
 
           <div className="space-y-2" data-id="f7na95ev6" data-path="src/components/TransactionForm.tsx">
+            <p>{JSON.stringify(userInfo)}</p>
             <Label htmlFor="toAddress" data-id="5d07kxyqc" data-path="src/components/TransactionForm.tsx">To Address</Label>
             <Input
               id="toAddress"
               type="text"
-              placeholder={`${userInfo?.secondAddress ? `${userInfo?.secondAddress.slice(0, 8)}...${userInfo?.secondAddress.slice(-8)}` : '0x...'}`}
+              // placeholder={`${userInfo?.secondAddress ? `${userInfo?.secondAddress.slice(0, 8)}...${userInfo?.secondAddress.slice(-8)}` : '0x...'}`}
               disabled
-              // value={toAddress}
-              onChange={(e) => setToAddress(e.target.value)}
+              value={`${userInfo?.secondAddress.slice(0, 8)}...${userInfo?.secondAddress.slice(-8)}`}
+              // onChange={(e) => setToAddress(e.target.value)}
               required
               className="font-mono" data-id="u54jok10s" data-path="src/components/TransactionForm.tsx" />
 

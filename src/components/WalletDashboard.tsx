@@ -52,7 +52,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance, activeTab })
 
   const fetchHistories = async (_address: string, type?: string) => {
     const data = await getHistory({ address: _address, type });
-    console.log(data, 'data');
+    // console.log(data, 'data');
     setHistories(data.histories);
   }
 
@@ -62,7 +62,7 @@ const WalletDashboard: React.FC<WalletDashboardProps> = ({ balance, activeTab })
       // Chuyển đổi từ wei sang BNB
       const balanceInBnb = ethers.formatEther(balance);
       setGereralBalance(balanceInBnb);
-      console.log(`Số dư BNB của ví ${walletAddress} là: ${balanceInBnb} BNB`);
+      // console.log(`Số dư BNB của ví ${walletAddress} là: ${balanceInBnb} BNB`);
     } catch (error) {
       console.error("Lỗi khi lấy số dư BNB:", error);
     }

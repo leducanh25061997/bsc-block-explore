@@ -56,7 +56,7 @@ const App = () => {
 
   const fetchBlocks = async () => {
     const response = await getBlocks();
-    console.log(response)
+    // console.log(response)
     if (response?.blocks?.length) {
       setBlocks(response?.blocks);
     }
