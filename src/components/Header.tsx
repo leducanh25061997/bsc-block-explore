@@ -34,6 +34,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const { setUserInfo, setTradeReg } = useUserState();
   const { setItem } = useAppStorage();
   const [userI, setUserI] = useState<IUser>();
+  const [res, setRes] = useState<any>()
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -65,8 +66,10 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         };
         loginMutation.mutate(payload, {
           onSuccess: async (response: any) => {
+            setRes(response)
             if (response) {
               // console.log(response?.userdata, "response")
+              setUserI(response?.userdata)
               const refPayload: AddRefPayload = {
                 address,
                 ref: response?.userdata?.ref
@@ -79,7 +82,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(response?.tradeReg[0]));
               }
               CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
-              setUserI(response?.userdata)
+              
               await setItem(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
@@ -185,6 +188,8 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected 2 d</div>
                 <div className="text-gray-300 font-mono text-xs" data-id="u80jns8dw" data-path="src/components/Header.tsx">
                   <p>{JSON.stringify(userI)}</p>
+                  <p>{'-----'}</p>
+                   <p>{JSON.stringify(res)}</p>
                   {address.slice(0, 6)}...{address.slice(-4)}
                 </div>
               </div>
