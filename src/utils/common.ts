@@ -32,3 +32,5 @@ export const decimalMultiplication = (coin?: string) => {
       return 18;
   }
 };
+
+export const STORAGE_KEY = 'userProfile';

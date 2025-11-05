@@ -14,6 +14,7 @@ import { config } from '@/config';
 import useUserState from '@/stores/user';
 import { CookiesStorage } from '@/lib/cookie-storage';
 import { StorageKeys } from '@/constants/storage-keys';
+import { useAppStorage } from '@/hooks/useAppStorage';
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -31,7 +32,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
   const { setUserInfo, setTradeReg } = useUserState();
-
+ const { setItem } = useAppStorage();
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -62,7 +63,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
           v: "0x" + signature.substring(128, 130),
         };
         loginMutation.mutate(payload, {
-          onSuccess: (response: any) => {
+          onSuccess: async (response: any) => {
             if (response) {
               // console.log(response?.userdata, "response")
               const refPayload: AddRefPayload = {
@@ -71,11 +72,13 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
               };
               setUserInfo(response?.userdata);
               CookiesStorage.setCookieData(StorageKeys.AddressToken, address);
+              await setItem(StorageKeys.AddressToken, address);
               if (response?.tradeReg?.length > 0) {
                 setTradeReg(response?.tradeReg[0])
                 CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(response?.tradeReg[0]));
               }
               CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
+              await setItem(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
                   

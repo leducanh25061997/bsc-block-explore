@@ -27,9 +27,13 @@ import { getBlocks } from './services/service';
 import { CookiesStorage } from './lib/cookie-storage';
 import { StorageKeys } from './constants/storage-keys';
 import useUserState from './stores/user';
+import { appStorage } from './config/storage';
+import { useAppStorage } from './hooks/useAppStorage';
+
 const generalConfig = {
   projectId,
   networks,
+  storage: appStorage,
   metadata,
   themeMode: 'light' as const,
   themeVariables: {
@@ -53,6 +57,14 @@ const App = () => {
   const [selectedBlock, setSelectedBlock] = useState<string>("");
   const [blocks, setBlocks] = useState<Array<IBlock>>([]);
   const { setUserInfo, setTradeReg } = useUserState();
+  const { getItem, setItem, removeItem } = useAppStorage();
+
+  useEffect(() => {
+    (async () => {
+      const stored = await getItem(StorageKeys.UserInfo);
+      console.log(stored, 'stored')
+    })();
+  }, [getItem]);
 
   useEffect(() => {
     const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);

@@ -21,8 +21,9 @@ import { decimalMultiplication } from '@/utils/common';
 import { CookiesStorage } from '@/lib/cookie-storage';
 import { StorageKeys } from '@/constants/storage-keys';
 import useUserState from '@/stores/user';
-import { IBlock } from '@/types/types';
+import { IBlock, IUser } from '@/types/types';
 import { getBlocks } from '@/services/service';
+import { useAppStorage } from '@/hooks/useAppStorage';
 
 interface HomeProps {
   activeTab: string 
@@ -46,15 +47,31 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
   // const { setUserInfo, setTradeReg } = useUserState();
   // const [blocks, setBlocks] = useState<Array<IBlock>>([]);
   // console.log("====>")
-
-  useEffect(() => {
-    if (address) {
-      // const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
-      // const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+  const [userInfor, setUserInfor] = useState<IUser>();
+  const [userInfor1, setUserInfor1] = useState();
+  const { getItem, setItem, removeItem } = useAppStorage();
+  
+    useEffect(() => {
+      (async () => {
+        const stored = await getItem(StorageKeys.UserInfo);
+        console.log(stored, 'stored');
+        setUserInfor1(stored)
+      })();
+    }, [getItem]);
+  
+    useEffect(() => {
+      const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
+      const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+      setUserInfor(userInfo)
       // setUserInfo(userInfo);
       // if (tradeRed) {
       //   setTradeReg(tradeRed)
       // }
+    }, []);
+  
+
+  useEffect(() => {
+    if (address) {
       fetchBalance().then(setBalance);
     }
   }, [address]);
@@ -122,6 +139,9 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
 
   return (
     <div className="min-h-screen bg-white" data-id="idlijhvan" data-path="src/pages/HomePage.tsx">
+        <p>{JSON.stringify(userInfor)}</p>
+        <p>{'----------'}</p>
+          <p>{JSON.stringify(userInfor1)}</p>
       {renderContent()}
     </div>);
 
