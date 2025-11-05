@@ -178,13 +178,13 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
             }
           </div>
         </div>
-        <p>{JSON.stringify(userI)}</p>
         <div className="flex md:hidden justify-between items-center space-x-4" data-id="45qntje6p" data-path="src/components/Header.tsx">
           {isConnected && address ?
             <div className="flex items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
               <div className="text-sm" data-id="yyhnx3c07" data-path="src/components/Header.tsx">
-                <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected</div>
+                <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected 2 d</div>
                 <div className="text-gray-300 font-mono text-xs" data-id="u80jns8dw" data-path="src/components/Header.tsx">
+                  <p>{JSON.stringify(userI)}</p>
                   {address.slice(0, 6)}...{address.slice(-4)}
                 </div>
               </div>
