@@ -5,7 +5,7 @@ import { useBlockMint } from '@/contexts/BlockMintContext';
 import { Wallet, Clock } from 'lucide-react';
 import { useAppKit, useAppKitAccount, useDisconnect } from '@reown/appkit/react';
 import { useAddRefMutation, useLoginMutation } from '@/services/service';
-import { AddRefPayload, AuthParams } from '@/types/types';
+import { AddRefPayload, AuthParams, IUser } from '@/types/types';
 import { toast } from 'react-toastify';
 import { AnimatePresence, motion } from 'motion/react';
 import Sidebar from './Sidebar';
@@ -32,7 +32,8 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
   const { setUserInfo, setTradeReg } = useUserState();
- const { setItem } = useAppStorage();
+  const { setItem } = useAppStorage();
+  const [userI, setUserI] = useState<IUser>();
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -78,6 +79,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(response?.tradeReg[0]));
               }
               CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
+              setUserI(response?.userdata)
               await setItem(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
@@ -176,7 +178,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
             }
           </div>
         </div>
-
+         <p>{JSON.stringify(userI)}</p>
         <div className="flex md:hidden justify-between items-center space-x-4" data-id="45qntje6p" data-path="src/components/Header.tsx">
             {isConnected && address ?
               <div className="flex items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
