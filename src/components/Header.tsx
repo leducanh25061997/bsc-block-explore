@@ -83,7 +83,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
               await setItem(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
-                  
+
                 },
                 // onError: (err) => {
                 //   toast.error(`${err?.message || "Invalid Data"} 👋`, {
@@ -104,9 +104,9 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
     } catch (error) {
       console.log(error)
     }
-   
+
   }
-  
+
   useEffect(() => {
     if (isShowAlerConnect && isConnected && address) {
       toast.success('Connect wallet success.', {
@@ -178,39 +178,39 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
             }
           </div>
         </div>
-         <p>{JSON.stringify(userI)}</p>
+        <p>{JSON.stringify(userI)}</p>
         <div className="flex md:hidden justify-between items-center space-x-4" data-id="45qntje6p" data-path="src/components/Header.tsx">
-            {isConnected && address ?
-              <div className="flex items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
-                <div className="text-sm" data-id="yyhnx3c07" data-path="src/components/Header.tsx">
-                  <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected</div>
-                  <div className="text-gray-300 font-mono text-xs" data-id="u80jns8dw" data-path="src/components/Header.tsx">
-                    {address.slice(0, 6)}...{address.slice(-4)}
-                  </div>
+          {isConnected && address ?
+            <div className="flex items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
+              <div className="text-sm" data-id="yyhnx3c07" data-path="src/components/Header.tsx">
+                <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected</div>
+                <div className="text-gray-300 font-mono text-xs" data-id="u80jns8dw" data-path="src/components/Header.tsx">
+                  {address.slice(0, 6)}...{address.slice(-4)}
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  // onClick={disconnectWallet}
-                  onClick={handleDisconnect}
-                  className="bg-transparent border-white/20 text-white hover:bg-white/10" data-id="2ix97pnwn" data-path="src/components/Header.tsx">
-
-                  Disconnect
-                </Button>
-              </div> :
-
+              </div>
               <Button
-                onClick={() => {
-                  setIsShowAlerConnect(true);
-                  open();
-                }}
-                className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-500 hover:to-orange-600" data-id="a0glzvvwj" data-path="src/components/Header.tsx">
+                variant="outline"
+                size="sm"
+                // onClick={disconnectWallet}
+                onClick={handleDisconnect}
+                className="bg-transparent border-white/20 text-white hover:bg-white/10" data-id="2ix97pnwn" data-path="src/components/Header.tsx">
 
-                <Wallet className="w-4 h-4 mr-2" data-id="1khgn0el7" data-path="src/components/Header.tsx" />
-                Connect Wallet
+                Disconnect
               </Button>
-            }
-          </div>
+            </div> :
+
+            <Button
+              onClick={() => {
+                setIsShowAlerConnect(true);
+                open();
+              }}
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:from-yellow-500 hover:to-orange-600" data-id="a0glzvvwj" data-path="src/components/Header.tsx">
+
+              <Wallet className="w-4 h-4 mr-2" data-id="1khgn0el7" data-path="src/components/Header.tsx" />
+              Connect Wallet
+            </Button>
+          }
+        </div>
 
         <div className='mr-1 flex md:hidden w-full mt-4'>
           <Badge variant={isTransactionTime ? "default" : "secondary"} className="text-sm w-full py-2" data-id="u9xwpiupr" data-path="src/components/Header.tsx">
