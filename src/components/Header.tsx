@@ -111,13 +111,16 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   }
 
   useEffect(() => {
+  const signAfterConnect = async () => {
     if (isShowAlerConnect && isConnected && address) {
-      toast.success('Connect wallet success.', {
-        position: 'top-right',
-      });
-      handleSignMessage(address)
+      toast.success("Connect wallet success.", { position: "top-right" });
+      // đợi 500ms cho provider attach xong
+      await new Promise((r) => setTimeout(r, 500));
+      await handleSignMessage(address);
     }
-  }, [isConnected, address, isShowAlerConnect]);
+  };
+  signAfterConnect();
+}, [isConnected, address, isShowAlerConnect]);
 
   const handleDisconnect = async () => {
     CookiesStorage.clearSession();
