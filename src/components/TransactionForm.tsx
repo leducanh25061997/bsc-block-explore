@@ -474,7 +474,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           </div>
 
           <div className="space-y-2" data-id="f7na95ev6" data-path="src/components/TransactionForm.tsx">
-            <p>{JSON.stringify(userInfo)}</p>
+            {/* <p>{JSON.stringify(userInfo)}</p> */}
             <Label htmlFor="toAddress" data-id="5d07kxyqc" data-path="src/components/TransactionForm.tsx">To Address</Label>
             <Input
               id="toAddress"
@@ -525,18 +525,19 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              if (isNotDisableButtonRegister) {
-                if (!hasTodayData(registerValue)) {
-                  handleRegister()
-                }
-              }  
-              if (!isNotDisableButtonTranfer){
-                handleTranfer()
-              }
+              // if (isNotDisableButtonRegister) {
+              //   if (!hasTodayData(registerValue)) {
+              //     handleRegister()
+              //   }
+              // }  
+              // if (!isNotDisableButtonTranfer){
+              //   handleTranfer()
+              // }
+              handleRegister()
               // handleTranfer()
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
-            disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
+            // disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
             data-id="y516kwf8c"
             data-path="src/components/TransactionForm.tsx"
           >

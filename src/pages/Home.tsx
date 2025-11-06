@@ -49,25 +49,17 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
   // console.log("====>")
   const [userInfor, setUserInfor] = useState<IUser>();
   const [userInfor1, setUserInfor1] = useState();
-  const { getItem, setItem, removeItem } = useAppStorage();
+  // const { getItem, setItem, removeItem } = useAppStorage();
+
   
-    useEffect(() => {
-      (async () => {
-        const stored = await getItem(StorageKeys.UserInfo);
-        console.log(stored, 'stored');
-        setUserInfor1(stored)
-      })();
-    }, [getItem]);
-  
-    useEffect(() => {
-      const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
-      const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
-      setUserInfor(userInfo)
-      // setUserInfo(userInfo);
-      // if (tradeRed) {
-      //   setTradeReg(tradeRed)
-      // }
-    }, []);
+    // useEffect(() => {
+    //   const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
+    //   const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+    //   setUserInfor(userInfo)
+    //   if (tradeRed) {
+    //     setTradeReg(tradeRed)
+    //   }
+    // }, []);
   
 
   useEffect(() => {
@@ -139,9 +131,6 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
 
   return (
     <div className="min-h-screen bg-white" data-id="idlijhvan" data-path="src/pages/HomePage.tsx">
-        <p>{JSON.stringify(userInfor)}</p>
-        <p>{'----------'}</p>
-          <p>{JSON.stringify(userInfor1)}</p>
       {renderContent()}
     </div>);
 
