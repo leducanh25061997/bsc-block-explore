@@ -33,7 +33,7 @@ import { useAppStorage } from './hooks/useAppStorage';
 const generalConfig = {
   projectId,
   networks,
-  storage: appStorage,
+  // storage: appStorage,
   metadata,
   themeMode: 'light' as const,
   themeVariables: {
