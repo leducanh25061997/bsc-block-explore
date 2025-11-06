@@ -33,8 +33,8 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const closeSidebar = () => setIsOpen(false);
   const { setUserInfo, setTradeReg } = useUserState();
   const { setItem } = useAppStorage();
-  const [userI, setUserI] = useState<IUser>();
-  const [res, setRes] = useState<any>()
+  // const [userI, setUserI] = useState<IUser>();
+  // const [res, setRes] = useState<any>()
 
   const formatTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -66,10 +66,10 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
         };
         loginMutation.mutate(payload, {
           onSuccess: async (response: any) => {
-            setRes(response)
+            // setRes(response)
             if (response) {
               // console.log(response?.userdata, "response")
-              setUserI(response?.userdata)
+              // setUserI(response?.userdata)
               const refPayload: AddRefPayload = {
                 address,
                 ref: response?.userdata?.ref
@@ -188,11 +188,11 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
           {isConnected && address ?
             <div className="flex items-center space-x-3" data-id="cdl7etl7w" data-path="src/components/Header.tsx">
               <div className="text-sm" data-id="yyhnx3c07" data-path="src/components/Header.tsx">
-                <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected 2 d</div>
+                <div className="font-medium" data-id="ax2zrkwi9" data-path="src/components/Header.tsx">Connected</div>
                 <div className="text-gray-300 font-mono text-xs" data-id="u80jns8dw" data-path="src/components/Header.tsx">
-                  <p>{JSON.stringify(userI)}</p>
+                  {/* <p>{JSON.stringify(userI)}</p>
                   <p>{'-----'}</p>
-                   <p>{JSON.stringify(res)}</p>
+                   <p>{JSON.stringify(res)}</p> */}
                   {address.slice(0, 6)}...{address.slice(-4)}
                 </div>
               </div>

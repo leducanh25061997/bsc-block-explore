@@ -57,14 +57,14 @@ const App = () => {
   const [selectedBlock, setSelectedBlock] = useState<string>("");
   const [blocks, setBlocks] = useState<Array<IBlock>>([]);
   const { setUserInfo, setTradeReg } = useUserState();
-  const { getItem, setItem, removeItem } = useAppStorage();
+  // const { getItem, setItem, removeItem } = useAppStorage();
 
-  useEffect(() => {
-    (async () => {
-      const stored = await getItem(StorageKeys.UserInfo);
-      console.log(stored, 'stored')
-    })();
-  }, [getItem]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const stored = await getItem(StorageKeys.UserInfo);
+  //     console.log(stored, 'stored')
+  //   })();
+  // }, [getItem]);
 
   useEffect(() => {
     const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
