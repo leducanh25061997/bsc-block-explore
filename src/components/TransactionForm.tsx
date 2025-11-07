@@ -537,7 +537,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
               // handleTranfer()
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
-            // disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
+            disabled={Number(amount) > 0 ? false : hasTodayData(registerValue)}
             data-id="y516kwf8c"
             data-path="src/components/TransactionForm.tsx"
           >
