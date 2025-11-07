@@ -21,12 +21,12 @@ import { decimalMultiplication } from '@/utils/common';
 import { CookiesStorage } from '@/lib/cookie-storage';
 import { StorageKeys } from '@/constants/storage-keys';
 import useUserState from '@/stores/user';
-import { IBlock, IUser } from '@/types/types';
-import { getBlocks } from '@/services/service';
+import { IBlock, IRegister, IUser } from '@/types/types';
+import { getBlocks, getRegister } from '@/services/service';
 import { useAppStorage } from '@/hooks/useAppStorage';
 
 interface HomeProps {
-  activeTab: string 
+  activeTab: string
   setActiveTab: (v: string, type?: "REDIRECT" | "SIDEBAR") => void;
   selectedBlock: string;
   setSelectedBlock: (v: string) => void;
@@ -44,34 +44,43 @@ const Home: React.FC<HomeProps> = ({ activeTab, setActiveTab, selectedBlock, set
   const decimals = 6;
   const { fetchBalance } = useAppKitBalance();
   const [balance, setBalance] = useState(null);
-  // const { setUserInfo, setTradeReg } = useUserState();
+  const { setTradeReg } = useUserState();
   // const [blocks, setBlocks] = useState<Array<IBlock>>([]);
   // console.log("====>")
-  const [userInfor, setUserInfor] = useState<IUser>();
-  const [userInfor1, setUserInfor1] = useState();
+  // const [registerValue, setRegisterValue] = useState<Array<IRegister>>([]);
   // const { getItem, setItem, removeItem } = useAppStorage();
 
-  
-    // useEffect(() => {
-    //   const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
-    //   const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
-    //   setUserInfor(userInfo)
-    //   if (tradeRed) {
-    //     setTradeReg(tradeRed)
-    //   }
-    // }, []);
-  
+
+  // useEffect(() => {
+  //   const userInfo = CookiesStorage.getCookieData(StorageKeys.UserInfo);
+  //   const tradeRed = CookiesStorage.getCookieData(StorageKeys.TradeReq);
+  //   setUserInfor(userInfo)
+  //   if (tradeRed) {
+  //     setTradeReg(tradeRed)
+  //   }
+  // }, []);
+
 
   useEffect(() => {
     if (address) {
       fetchBalance().then(setBalance);
+      fetchFetchRegister(address)
     }
   }, [address]);
+
+  const fetchFetchRegister = async (value: string) => {
+    const response = await getRegister({ address: value });
+    // console.log(response, "response")
+    if (response?.tradeReg?.length) {
+      // setRegisterValue(response?.tradeReg)
+      setTradeReg(response?.tradeReg[0])
+    }
+  }
 
   const handleSelectBlock = async (blockNumber: string, hash: string) => {
     setSelectedBlock(blockNumber)
     setActiveTab("transaction", "REDIRECT")
-    
+
     // console.log(parseUnits(amount, decimals))
     // if (!isConnected || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
     //   // to ast.error('Address không hợp lệ hoặc chưa kết nối');
