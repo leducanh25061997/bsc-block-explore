@@ -8,7 +8,9 @@ export function useDisableButtonByTime(startHour: number, endHour: number) {
   const [nextCheck, setNextCheck] = useState<Date | null>(null);
   const { setUserInfo, setTradeReg } = useUserState();
 
+
   const checkTime = () => {
+    
     const now = new Date();
     const hours = now.getHours();
 
@@ -17,8 +19,8 @@ export function useDisableButtonByTime(startHour: number, endHour: number) {
     } else {
       setIsDisabled(false);
     }
-
-    if (hours >= 7) {
+    // console.log(hours, 'hours')
+    if (hours >= 21) {
       setTradeReg(null);
       CookiesStorage.clearCookieData(StorageKeys.TradeReq);
       // console.log("Cookie setTradeReg removed at", now.toLocaleTimeString());
