@@ -525,15 +525,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ selectedBlock, setAct
           <Button
             // type="submit"
             onClick={() => {
-              if (isNotDisableButtonRegister) {
-                if (!hasTodayData(registerValue)) {
-                  handleRegister()
-                }
-              }  
-              if (!isNotDisableButtonTranfer){
-                handleTranfer()
-              }
-              // handleRegister()
+              // if (isNotDisableButtonRegister) {
+              //   if (!hasTodayData(registerValue)) {
+              //     handleRegister()
+              //   }
+              // }  
+              // if (!isNotDisableButtonTranfer){
+              //   handleTranfer()
+              // }
+              handleRegister()
               // handleTranfer()
             }}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 disabled:from-blue-300 disabled:to-purple-300 mt-4"
