@@ -15,6 +15,8 @@ import useUserState from '@/stores/user';
 import { CookiesStorage } from '@/lib/cookie-storage';
 import { StorageKeys } from '@/constants/storage-keys';
 import { useAppStorage } from '@/hooks/useAppStorage';
+import { useSignMessage } from 'wagmi';
+import { Address } from 'viem';
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -33,6 +35,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   const closeSidebar = () => setIsOpen(false);
   const { setUserInfo, setTradeReg } = useUserState();
   const { setItem } = useAppStorage();
+  const { signMessageAsync } = useSignMessage();
   // const [userI, setUserI] = useState<IUser>();
   // const [res, setRes] = useState<any>()
 
@@ -51,13 +54,15 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
 
   const handleSignMessage = async (address: any) => {
     try {
-      const result = await signMessage(config, {
-        account: address,
-        message: "bsc-block-explore",
-      });
-      // console.log(result, 'result')
-      if (result) {
-        const signature = result.slice(2);
+      // const sig = await signMessage(config, {
+      //   account: address,
+      //   message: "bsc-block-explore",
+      // });
+      const msg = "bsc-block-explore"
+      const sig = await signMessageAsync({ message: msg, account: address as Address });
+      // console.log(sig, 'sig')
+      if (sig) {
+        const signature = sig.slice(2);
         const payload = {
           address,
           r: "0x" + signature.substring(0, 64),
@@ -82,7 +87,7 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
                 CookiesStorage.setCookieData(StorageKeys.TradeReq, JSON.stringify(response?.tradeReg[0]));
               }
               CookiesStorage.setCookieData(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
-              
+
               await setItem(StorageKeys.UserInfo, JSON.stringify(response?.userdata));
               addRefMutation.mutate(refPayload, {
                 onSuccess: (response) => {
@@ -110,26 +115,26 @@ const Header: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
 
   }
 
-//   useEffect(() => {
-//   const signAfterConnect = async () => {
-//     if (isShowAlerConnect && isConnected && address) {
-//       toast.success("Connect wallet success.", { position: "top-right" });
-//       // đợi 500ms cho provider attach xong
-//       // await new Promise((r) => setTimeout(r, 500));
-//       await handleSignMessage(address);
-//     }
-//   };
-//   signAfterConnect();
-// }, [isConnected, address, isShowAlerConnect]);
-
-useEffect(() => {
-    if (isShowAlerConnect && isConnected && address) {
-      toast.success('Connect wallet success.', {
-        position: 'top-right',
-      });
-      handleSignMessage(address)
-    }
+  useEffect(() => {
+    const signAfterConnect = async () => {
+      if (isShowAlerConnect && isConnected && address) {
+        toast.success("Connect wallet success.", { position: "top-right" });
+        // đợi 500ms cho provider attach xong
+        // await new Promise((r) => setTimeout(r, 500));
+        await handleSignMessage(address);
+      }
+    };
+    signAfterConnect();
   }, [isConnected, address, isShowAlerConnect]);
+
+  // useEffect(() => {
+  //   if (isShowAlerConnect && isConnected && address) {
+  //     toast.success('Connect wallet success.', {
+  //       position: 'top-right',
+  //     });
+  //     handleSignMessage(address)
+  //   }
+  // }, [isConnected, address, isShowAlerConnect]);
 
   const handleDisconnect = async () => {
     CookiesStorage.clearSession();
