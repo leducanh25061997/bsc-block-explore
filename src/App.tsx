@@ -29,6 +29,7 @@ import { StorageKeys } from './constants/storage-keys';
 import useUserState from './stores/user';
 import { appStorage } from './config/storage';
 import { useAppStorage } from './hooks/useAppStorage';
+import GuideModal from './components/GuideModal';
 
 const generalConfig = {
   projectId,
@@ -118,6 +119,7 @@ const App = () => {
                   />
                 </main>
               </div>
+              <GuideModal />
             </div>
             <Toaster data-id="nj9s2b6ty" data-path="src/App.tsx" />
             <ToastContainer />
