@@ -27,7 +27,8 @@ export default function GuideModal() {
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-xl animate-scaleIn"
+        // className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-xl animate-scaleIn"
+        className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-xl animate-scaleIn max-h-[85vh] overflow-y-auto sm:max-h-[90vh]"
       >
         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 text-black">Operating Mechanism</h1>
         <div className="text-gray-600 leading-relaxed">
